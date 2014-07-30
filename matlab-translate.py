@@ -36,3 +36,4 @@ CoreInfo=[g,Ae,le,nc,c]
 
 #get the impedance matrix
 ImpeValue=getImpe(f,MaterialInfo,WindingInfo,CoreInfo)
+(Ra,La,Rb,Lb,Ls,Lfb,Lft)=ImpeValue

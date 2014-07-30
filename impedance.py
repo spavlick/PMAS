@@ -1,5 +1,6 @@
 import math
 import cmath
+import numpy
 
 def getImpe(f,MaterialInfo,WindingInfo,CoreInfo):
   (sigma,mu0,mur)=MaterialInfo
@@ -28,16 +29,17 @@ def getImpe(f,MaterialInfo,WindingInfo,CoreInfo):
     Xb.append(d/w[i1]*Zb)
     Xs.append(complex(0,1)*(f*2*math.pi)*mu0*s[i1]*d/w[i1])
 
-    #impedance for the ferrite core
-    Xfb=complex(0,1)*(f*2*math.pi)*mu0*Ae/(g+Ae*w[i1]/(mur*c*d))
-    Xft=complex(0,1)*(f*2*math.pi)*mu0*mur*c*d/w[i1]
+  #impedance for the ferrite core
+  Xfb=complex(0,1)*(f*2*math.pi)*mu0*Ae/(g+Ae*w[i1]/(mur*c*d))
+  Xft=complex(0,1)*(f*2*math.pi)*mu0*mur*c*d/w[i1]
 
-  Ra=Xa.real
-  La=imag(Xa)/(f*2*math.pi)
-  Rb=real(Xb)
-  Lb=imag(Xb)/(f*2*math.pi)
-  Ls=imag(Xs)/(f*2*math.pi)
-  Lfb=imag(Xfb)/(f*2*math.pi)
-  Lft=imag(Xft)/(f*2*math.pi)
+  #calculate output
+  Ra=numpy.array([e.real for e in Xa])
+  La=numpy.array([e.imag for e in Xa])/(f*2*math.pi)
+  Rb=numpy.array([e.real for e in Xb])
+  Lb=numpy.array([e.imag for e in Xb])/(f*2*math.pi)
+  Ls=numpy.array([e.imag for e in Xs])/(f*2*math.pi)
+  Lfb=Xfb.imag/(f*2*math.pi)
+  Lft=Xft.imag/(f*2*math.pi)
 
   return [Ra,La,Rb,Lb,Ls,Lfb,Lft]

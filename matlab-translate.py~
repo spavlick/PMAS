@@ -29,9 +29,9 @@ nc=1
 c=2.5e-3
 
 #Packaging Information into Cells
-MaterialInfo={sigma,mu0,mur}
-WindingInfo={NumofLayer,h,s,w,m}
-CoreInfo={g,Ae,le,nc,c}
+MaterialInfo=[sigma,mu0,mur]
+WindingInfo=[NumofLayer,h,s,w,m]
+CoreInfo=[g,Ae,le,nc,c]
 
 
 #get the impedance matrix
