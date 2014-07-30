@@ -1,4 +1,5 @@
 import math
+from impedance import getImpe
 
 #Set switching frequency
 f=10e6
@@ -28,10 +29,10 @@ nc=1
 c=2.5e-3
 
 #Packaging Information into Cells
-MaterialInfo={sigma,mu0,mur}
-WindingInfo={NumofLayer,h,s,w,m}
-CoreInfo={g,Ae,1e,nc,c}
+MaterialInfo=[sigma,mu0,mur]
+WindingInfo=[NumofLayer,h,s,w,m]
+CoreInfo=[g,Ae,le,nc,c]
 
 
 #get the impedance matrix
-
+ImpeValue=getImpe(f,MaterialInfo,WindingInfo,CoreInfo)
