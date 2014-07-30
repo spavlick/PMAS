@@ -31,7 +31,3 @@ c=2.5e-3
 MaterialInfo={sigma,mu0,mur}
 WindingInfo={NumofLayer,h,s,w,m}
 CoreInfo={g,Ae,1e,nc,c}
-
-
-#get the impedance matrix
-
