@@ -1,8 +1,10 @@
 Summary of the Transformer Structure in the I/O Ports
 There are 2 Windings in total
 *Winding 0 is Series Connected with Winding Port Port0 and PortN0
-*Winding 1 is Parallel Connected with Winding Port PortP1 and PortN1
 *Include Layer 0, thickness 1.75e-05, width 0.005, turns 1, spacing 0.000787
+*Include Layer 3, thickness 1.75e-05, width 0.005, turns 1, spacing 0.001353
+*Winding 1 is Parallel Connected with Winding Port PortP1 and PortN1
+*Include Layer 1, thickness 1.75e-05, width 0.005, turns 1, spacing 0.00014
 *NetList for Layer 0
 Le0 N0 P0           1.00
 Li0 G Md0 1
@@ -54,4 +56,15 @@ Lfb T5 G         226.19
 **************************
 *Winding Connections
 *Using ZERO ohm resistors
+NumofWinding and WindingIndex does not match
 *Winding 0 is Series Connected
+*Include layer 0
+*Include layer 3
+RexP3 PortP0 P3 ln
+RexN3 PortN0 N3 ln
+*Winding 1 is Parallel Connected
+*Include layer 1
+RexP1 PortP1 P1 ln
+RexN1 PortN1 N1 ln
+***************************
+*This is the END of the Netlist

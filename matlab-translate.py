@@ -18,7 +18,7 @@ m=[1,1,1,1]
 
 #Winding Information
 NumofWinding=2
-WindingIndex=[1,2,2,1]
+WindingIndex=[0,1,1,0]
 WindingStyle=[0,1]
 
 #Core Information
@@ -115,7 +115,7 @@ for index_winding in range(NumofWinding):
     f.write('\n*Winding {} is Series Connected'.format(index_winding))
     
     #identify which layers it contains
-    numSeriesLayers=1
+    numSeriesLayers=0
     for index_layer in range(NumofLayer):
       if WindingIndex[index_layer]==index_winding:
         f.write('\n*Include layer {}'.format(index_layer))
