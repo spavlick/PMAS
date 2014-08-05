@@ -42,20 +42,20 @@ ImpeValue=getImpe(f,MaterialInfo,WindingInfo,CoreInfo)
 Serieslayers={}
 f=open('netlist.txt','w')
 f.write('Summary of the Transformer Structure in the I/O Ports')
-f.write('There are {} Windings in total'.format(NumofWinding))
+f.write('\nThere are {} Windings in total'.format(NumofWinding))
 for index_winding in range(NumofWinding):
   if WindingStyle[index_winding]==1:
-    f.write('*Winding {0} is Parallel Connected with Winding Port PortP{0} and PortN{0}'.format(index_winding))
+    f.write('\n*Winding {0} is Parallel Connected with Winding Port PortP{0} and PortN{0}'.format(index_winding))
     for index_layer in range(NumofLayer):
       if WindingIndex[index_layer]==index_winding:
-        f.write('*Include Layer {}, thickness {}, width {}, turns {}, spacing {}'.format(index_layer, h[index_layer], w[index_layer], m[index_layer], s[index_layer]))
+        f.write('\n*Include Layer {}, thickness {}, width {}, turns {}, spacing {}'.format(index_layer, h[index_layer], w[index_layer], m[index_layer], s[index_layer]))
         break
   if WindingStyle[index_winding]==0:
-    f.write('*Winding {0} is Series Connected with Winding Port Port{0} and PortN{0}'.format(index_winding))
+    f.write('\n*Winding {0} is Series Connected with Winding Port Port{0} and PortN{0}'.format(index_winding))
     numSeriesLayers=1
     for index_layer in range(NumofLayer):
       if WindingIndex[index_layer]==index_winding:
-        f.write('*Include Layer {}, thickness {}, width {}, turns {}, spacing {}'.format(index_layer,h[index_layer],w[index_layer],m[index_layer],s[index_layer]))
+        f.write('\n*Include Layer {}, thickness {}, width {}, turns {}, spacing {}'.format(index_layer,h[index_layer],w[index_layer],m[index_layer],s[index_layer]))
         Serieslayers[numSeriesLayers]=index_layer 
         numSeriesLayers+=1
 
@@ -68,65 +68,65 @@ for index in range(NumofLayer):
   ls=Ls[index]
   mx=m[index]
 
-  f.write('*NetList for Layer {}'.format(index))
-  f.write('Le{0} N{0} P{0} {1:14.2f}'.format(index,mx**2))
-  f.write('Li{0} G Md{0} {1}'.format(index,1))
-  f.write('Lg{0} Mg{0} Md{0} {1:14.2f}'.format(index,lb*1e12))
-  f.write('Rg{0} Mc{0} Mg{0} {1:14.2f}'.format(index,rb*1e3))
-  f.write('Rt{0} Mc{0} Mt{0} {1:14.2f}'.format(index,ra*1e6))
-  f.write('Rb{0} Mb{0} Mc{0} {1:14.2f}'.format(index,ra*1e6))
-  f.write('Lt{0} T{0} Mt{0} {1:14.2f}'.format(index,la*1e12))
-  f.write('Lb{0} Mb{0} B{0} {1:14.2f}'.format(index,la*1e12))
-  f.write('Ls{0} B{0} T{1} {2:14.2f}'.format(index,index+1,ls*1e12))
-  f.write('K{0} Le{0} Li{0} 1'.format(index))
+  f.write('\n*NetList for Layer {}'.format(index))
+  f.write('\nLe{0} N{0} P{0} {1:14.2f}'.format(index,mx**2))
+  f.write('\nLi{0} G Md{0} {1}'.format(index,1))
+  f.write('\nLg{0} Mg{0} Md{0} {1:14.2f}'.format(index,lb*1e12))
+  f.write('\nRg{0} Mc{0} Mg{0} {1:14.2f}'.format(index,rb*1e3))
+  f.write('\nRt{0} Mc{0} Mt{0} {1:14.2f}'.format(index,ra*1e6))
+  f.write('\nRb{0} Mb{0} Mc{0} {1:14.2f}'.format(index,ra*1e6))
+  f.write('\nLt{0} T{0} Mt{0} {1:14.2f}'.format(index,la*1e12))
+  f.write('\nLb{0} Mb{0} B{0} {1:14.2f}'.format(index,la*1e12))
+  f.write('\nLs{0} B{0} T{1} {2:14.2f}'.format(index,index+1,ls*1e12))
+  f.write('\nK{0} Le{0} Li{0} 1'.format(index))
 
 #Print the ferrite cores
-f.write('*******************************')
-f.write('*NetList for Top and Bottom Ferrites')
-f.write('Lft T1 G {:14.2f}'.format(Lft*1e6))
-f.write('Lfb T{} G {:14.2f}'.format(NumofLayer+1,Lfb*1e6))
+f.write('\n*******************************')
+f.write('\n*NetList for Top and Bottom Ferrites')
+f.write('\nLft T1 G {:14.2f}'.format(Lft*1e6))
+f.write('\nLfb T{} G {:14.2f}'.format(NumofLayer+1,Lfb*1e6))
 
 #Print the external connections
-f.write('**************************')
-f.write('*Winding Connections')
-f.write('*Using ZERO ohm resistors')
+f.write('\n**************************')
+f.write('\n*Winding Connections')
+f.write('\n*Using ZERO ohm resistors')
 
 #Check if data is correct
 if NumofWinding!=max(WindingIndex):
-  f.write('NumofWinding and WindingIndex does not match')
+  f.write('\nNumofWinding and WindingIndex does not match')
 
 if NumofWinding!=len(WindingStyle):
-  f.write('NumofWinding and WindingStyle does not match')
+  f.write('\nNumofWinding and WindingStyle does not match')
 
 #Create External Winding Ports
 for index_winding in range(NumofWinding):
   #Parallel Connected
   if WindingStyle[index_winding]==1:
-    f.write('*Winding {} is Parallel Connected'.format(index_winding))
+    f.write('\n*Winding {} is Parallel Connected'.format(index_winding))
     for index_layer in range(NumofLayer):
       if WindingIndex[index_layer]==index_winding:
-        f.write('*Include layer {}'.format(index_layer))
-        f.write('RexP{0} PortP{1} P{0} ln'.format(index_layer,index_winding))
-        f.write('RexN{0} PortN{1} N{0} ln'.format(index_layer,index_winding))
+        f.write('\n*Include layer {}'.format(index_layer))
+        f.write('\nRexP{0} PortP{1} P{0} ln'.format(index_layer,index_winding))
+        f.write('\nRexN{0} PortN{1} N{0} ln'.format(index_layer,index_winding))
         break
 
   #Series Connected
   if WindingStyle[index_winding]==0:
-    f.write('*Winding {} is Series Connected'.format(index_winding))
+    f.write('\n*Winding {} is Series Connected'.format(index_winding))
     
     #identify which layers it contains
     numSeriesLayers=1
     for index_layer in range(NumofLayer):
       if WindingIndex[index_layer]==index_winding:
-        f.write('*Include layer {}'.format(index_layer))
+        f.write('\n*Include layer {}'.format(index_layer))
         Serieslayers[numSeriesLayers]=index_layer
         numSeriesLayers+=1
-    f.write('RexP{0} PortP{1} P{0} ln'.format(Serieslayers[1],index_winding))
-    f.write('RexN{0} PortN{1} N{0} ln'.format(Serieslayers[numSeriesLayers-1],index_winding))
+    f.write('\nRexP{0} PortP{1} P{0} ln'.format(Serieslayers[1],index_winding))
+    f.write('\nRexN{0} PortN{1} N{0} ln'.format(Serieslayers[numSeriesLayers-1],index_winding))
     for index_SeriesLayers in range(numSeriesLayers-2):
-      f.write('RexM{0} N{0} P{1} ln'.format(Serieslayers[index_SeriesLayers],Serieslayers[index_SeriesLayers+1]))
+      f.write('\nRexM{0} N{0} P{1} ln'.format(Serieslayers[index_SeriesLayers],Serieslayers[index_SeriesLayers+1]))
 
 #netlist finalized
-f.write('***************************')
-f.write('*This is the END of the Netlist')
+f.write('\n***************************')
+f.write('\n*This is the END of the Netlist')
 f.close()
