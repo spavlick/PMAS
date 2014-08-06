@@ -18,7 +18,7 @@ m=[1,1,1,1]
 
 #Winding Information
 NumofWinding=2
-WindingIndex=[0,1,1,0]
+WindingIndex=[1,2,2,1]
 WindingStyle=[0,1]
 
 #Core Information
@@ -54,7 +54,7 @@ for index_winding in range(NumofWinding):
     f.write('\n*Winding {0} is Series Connected with Winding Port Port{0} and PortN{0}'.format(index_winding))
     numSeriesLayers=1
     for index_layer in range(NumofLayer):
-      if WindingIndex[index_layer]==index_winding:
+      if WindingIndex[index_layer]==index_winding+1:
         f.write('\n*Include Layer {}, thickness {}, width {}, turns {}, spacing {}'.format(index_layer,h[index_layer],w[index_layer],m[index_layer],s[index_layer]))
         Serieslayers[numSeriesLayers]=index_layer 
         numSeriesLayers+=1
@@ -69,22 +69,22 @@ for index in range(NumofLayer):
   mx=m[index]
 
   f.write('\n*NetList for Layer {}'.format(index))
-  f.write('\nLe{0} N{0} P{0} {1:14.2f}'.format(index,mx**2))
+  f.write('\nLe{0} N{0} P{0} {1}'.format(index,mx**2))
   f.write('\nLi{0} G Md{0} {1}'.format(index,1))
-  f.write('\nLg{0} Mg{0} Md{0} {1:14.2f}'.format(index,lb*1e12))
-  f.write('\nRg{0} Mc{0} Mg{0} {1:14.2f}'.format(index,rb*1e3))
-  f.write('\nRt{0} Mc{0} Mt{0} {1:14.2f}'.format(index,ra*1e6))
-  f.write('\nRb{0} Mb{0} Mc{0} {1:14.2f}'.format(index,ra*1e6))
-  f.write('\nLt{0} T{0} Mt{0} {1:14.2f}'.format(index,la*1e12))
-  f.write('\nLb{0} Mb{0} B{0} {1:14.2f}'.format(index,la*1e12))
-  f.write('\nLs{0} B{0} T{1} {2:14.2f}'.format(index,index+1,ls*1e12))
+  f.write('\nLg{0} Mg{0} Md{0} {1:14.2f}p'.format(index,lb*1e12))
+  f.write('\nRg{0} Mc{0} Mg{0} {1:14.2f}m'.format(index,rb*1e3))
+  f.write('\nRt{0} Mc{0} Mt{0} {1:14.2f}u'.format(index,ra*1e6))
+  f.write('\nRb{0} Mb{0} Mc{0} {1:14.2f}u'.format(index,ra*1e6))
+  f.write('\nLt{0} T{0} Mt{0} {1:14.2f}p'.format(index,la*1e12))
+  f.write('\nLb{0} Mb{0} B{0} {1:14.2f}p'.format(index,la*1e12))
+  f.write('\nLs{0} B{0} T{1} {2:14.2f}p'.format(index,index+1,ls*1e12))
   f.write('\nK{0} Le{0} Li{0} 1'.format(index))
 
 #Print the ferrite cores
 f.write('\n*******************************')
 f.write('\n*NetList for Top and Bottom Ferrites')
-f.write('\nLft T1 G {:14.2f}'.format(Lft*1e6))
-f.write('\nLfb T{} G {:14.2f}'.format(NumofLayer+1,Lfb*1e6))
+f.write('\nLft T1 G {:14.2f}u'.format(Lft*1e6))
+f.write('\nLfb T{} G {:14.2f}u'.format(NumofLayer+1,Lfb*1e6))
 
 #Print the external connections
 f.write('\n**************************')
@@ -115,16 +115,16 @@ for index_winding in range(NumofWinding):
     f.write('\n*Winding {} is Series Connected'.format(index_winding))
     
     #identify which layers it contains
-    numSeriesLayers=0
+    numSeriesLayers=1
     for index_layer in range(NumofLayer):
-      if WindingIndex[index_layer]==index_winding:
+      if WindingIndex[index_layer]==index_winding+1:
         f.write('\n*Include layer {}'.format(index_layer))
         Serieslayers[numSeriesLayers]=index_layer
         numSeriesLayers+=1
     f.write('\nRexP{0} PortP{1} P{0} ln'.format(Serieslayers[1],index_winding))
     f.write('\nRexN{0} PortN{1} N{0} ln'.format(Serieslayers[numSeriesLayers-1],index_winding))
     for index_SeriesLayers in range(numSeriesLayers-2):
-      f.write('\nRexM{0} N{0} P{1} ln'.format(Serieslayers[index_SeriesLayers],Serieslayers[index_SeriesLayers+1]))
+      f.write('\nRexM{0} N{0} P{1} ln'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2]))
 
 #netlist finalized
 f.write('\n***************************')
