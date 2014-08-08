@@ -1,6 +1,6 @@
 import math
 from impedance import getImpe
-from material-info import *
+from materialinfo2 import *
 
 #Packaging Information into Cells
 MaterialInfo=[sigma,mu0,mur]
@@ -14,7 +14,7 @@ ImpeValue=getImpe(f,MaterialInfo,WindingInfo,CoreInfo)
 
 #Repeat and summarizing the input information
 Serieslayers={}
-f=open('netlist.txt','w')
+f=open('netlist2.txt','w')
 f.write('Summary of the Transformer Structure in the I/O Ports')
 f.write('\nThere are {} Windings in total'.format(NumofWinding))
 for index_winding in range(NumofWinding):
@@ -43,7 +43,7 @@ for index in range(NumofLayer):
   ls=Ls[index]
   mx=m[index]
 
-  f.write('\n*NetList for Layer {}'.format(index))
+  f.write('\n*NetList for Layer {}'.format(index+1))
   f.write('\nLe{0} N{0} P{0} {1}'.format(index,mx**2))
   f.write('\nLi{0} G Md{0} {1}'.format(index,1))
   f.write('\nLg{0} Mg{0} Md{0} {1:14.2f}p'.format(index,lb*1e12))
