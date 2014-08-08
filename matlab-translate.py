@@ -44,6 +44,7 @@ f=open('netlist.txt','w')
 f.write('Summary of the Transformer Structure in the I/O Ports')
 f.write('\nThere are {} Windings in total'.format(NumofWinding))
 for index_winding in range(NumofWinding):
+  #Parallel Connected
   if WindingStyle[index_winding]==1:
     f.write('\n*Winding {0} is Parallel Connected with Winding Port PortP{0} and PortN{0}'.format(index_winding))
     for index_layer in range(NumofLayer):
@@ -54,9 +55,9 @@ for index_winding in range(NumofWinding):
     f.write('\n*Winding {0} is Series Connected with Winding Port Port{0} and PortN{0}'.format(index_winding))
     numSeriesLayers=1
     for index_layer in range(NumofLayer):
-      if WindingIndex[index_layer]==index_winding+1:
+      if WindingIndex[index_layer]==index_winding:
         f.write('\n*Include Layer {}, thickness {}, width {}, turns {}, spacing {}'.format(index_layer,h[index_layer],w[index_layer],m[index_layer],s[index_layer]))
-        Serieslayers[numSeriesLayers]=index_layer 
+        Serieslayers[numSeriesLayers]=index_layer+1 
         numSeriesLayers+=1
 
 #Generate the SPICE netlist
@@ -102,29 +103,29 @@ if NumofWinding!=len(WindingStyle):
 for index_winding in range(NumofWinding):
   #Parallel Connected
   if WindingStyle[index_winding]==1:
-    f.write('\n*Winding {} is Parallel Connected'.format(index_winding))
+    f.write('\n*Winding {} is Parallel Connected'.format(index_winding+1))
     for index_layer in range(NumofLayer):
-      if WindingIndex[index_layer]==index_winding:
-        f.write('\n*Include layer {}'.format(index_layer))
-        f.write('\nRexP{0} PortP{1} P{0} ln'.format(index_layer,index_winding))
-        f.write('\nRexN{0} PortN{1} N{0} ln'.format(index_layer,index_winding))
-        break
+      if WindingIndex[index_layer]==index_winding+1:
+        f.write('\n*Include layer {}'.format(index_layer+1))
+        f.write('\nRexP{0} PortP{1} P{0} 1n'.format(index_layer+1,index_winding+1))
+        f.write('\nRexN{0} PortN{1} N{0} 1n'.format(index_layer+1,index_winding+1))
+
 
   #Series Connected
   if WindingStyle[index_winding]==0:
-    f.write('\n*Winding {} is Series Connected'.format(index_winding))
+    f.write('\n*Winding {} is Series Connected'.format(index_winding+1))
     
     #identify which layers it contains
     numSeriesLayers=1
     for index_layer in range(NumofLayer):
       if WindingIndex[index_layer]==index_winding+1:
-        f.write('\n*Include layer {}'.format(index_layer))
-        Serieslayers[numSeriesLayers]=index_layer
+        f.write('\n*Include layer {}'.format(index_layer+1))
+        Serieslayers[numSeriesLayers]=index_layer+1
         numSeriesLayers+=1
-    f.write('\nRexP{0} PortP{1} P{0} ln'.format(Serieslayers[1],index_winding))
-    f.write('\nRexN{0} PortN{1} N{0} ln'.format(Serieslayers[numSeriesLayers-1],index_winding))
+    f.write('\nRexP{0} PortP{1} P{0} 1n'.format(Serieslayers[1],index_winding+1))
+    f.write('\nRexN{0} PortN{1} N{0} 1n'.format(Serieslayers[numSeriesLayers-1],index_winding+1))
     for index_SeriesLayers in range(numSeriesLayers-2):
-      f.write('\nRexM{0} N{0} P{1} ln'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2]))
+      f.write('\nRexM{0} N{0} P{1} 1n'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2]))
 
 #netlist finalized
 f.write('\n***************************')
