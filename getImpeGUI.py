@@ -2,7 +2,7 @@ import math
 import cmath
 import numpy
 
-def getImpe(*args):
+def getImpe(f,MaterialInfo,WindingInfo,CoreInfo):
   (sigma,mu0,mur)=MaterialInfo
   (NumofLayer,h,s,w,m)=WindingInfo
   (g,Ae,le,nc,c)=CoreInfo

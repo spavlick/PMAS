@@ -1,0 +1,10 @@
+def init():
+  global freq
+  global mur
+  global nlayer
+  global s
+  global h
+  global w
+  global g
+  global nc
+  global c

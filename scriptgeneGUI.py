@@ -1,8 +1,25 @@
 import math
-from impedance import getImpe
-from materialinfo2 import *
+from getImpeGUI import getImpe
+from __main__ import *
 
-def generate_netlist(args*):
+def generate_netlist(*args):
+  #import variables
+  sigma=5.8e7
+  mu0=4*math.pi*1e-7
+
+  f=float(freq.get())
+  mur=float(mur.get())
+  NumofLayer=int(nlayer.get())
+  h=float(h.get())
+  s=float(s.get())
+  w=float(w.get())
+  m=float(m.get())
+  g=float(g.get())
+  Ae=float(Ae.get())
+  le=float(le.get())
+  nc=int(nc.get())
+  c=float(c.get())
+
   #Packaging Information into Cells
   MaterialInfo=[sigma,mu0,mur]
   WindingInfo=[NumofLayer,h,s,w,m]
@@ -15,9 +32,9 @@ def generate_netlist(args*):
 
   #Repeat and summarizing the input information
   Serieslayers={}
-  f=open('netlist2.txt','w')
-  f.write('Summary of the Transformer Structure in the I/O Ports')
-  f.write('\nThere are {} Windings in total'.format(NumofWinding))
+  f=open('netlistgui.txt','w')
+  f.write('*Summary of the Transformer Structure in the I/O Ports')
+  f.write('\n*There are {} Windings in total'.format(NumofWinding))
   for index_winding in range(NumofWinding):
     #Parallel Connected
     if WindingStyle[index_winding]==1:
@@ -69,10 +86,10 @@ def generate_netlist(args*):
 
   #Check if data is correct
   if NumofWinding!=max(WindingIndex):
-    f.write('\nNumofWinding and WindingIndex does not match')
+    f.write('\n*NumofWinding and WindingIndex does not match')
 
   if NumofWinding!=len(WindingStyle):
-    f.write('\nNumofWinding and WindingStyle does not match')
+    f.write('\n*NumofWinding and WindingStyle does not match')
 
   #Create External Winding Ports
   for index_winding in range(NumofWinding):

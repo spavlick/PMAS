@@ -1,8 +1,7 @@
 import math
 from impedance import getImpe
-from materialinfo2 import *
 
-def generate_netlist(args*):
+def generate_netlist():
   #Packaging Information into Cells
   MaterialInfo=[sigma,mu0,mur]
   WindingInfo=[NumofLayer,h,s,w,m]
@@ -15,7 +14,7 @@ def generate_netlist(args*):
 
   #Repeat and summarizing the input information
   Serieslayers={}
-  f=open('netlist2.txt','w')
+  f=open('netlistgui.txt','w')
   f.write('Summary of the Transformer Structure in the I/O Ports')
   f.write('\nThere are {} Windings in total'.format(NumofWinding))
   for index_winding in range(NumofWinding):
