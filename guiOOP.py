@@ -1,6 +1,10 @@
 from Tkinter import *
 from ttk import *
 import tkFileDialog
+import math
+
+SIGMA=5.8e7
+MU0=4*math.pi*1e-7
 
 class GUI(Frame):
   def __init__(self,root):
@@ -38,21 +42,23 @@ class GUI(Frame):
     self.c=StringVar() #thickness of top and bottom ferrite
 
     #create variables for entry objects
-    self.fentry=None
-    self.murentry=None
-    self.nlayerentry=None
-    self.hentry=None
-    self.sentry=None
-    self.wentry=None
-    self.mentry=None
-    self.nwindingentry=None
-    self.wstyleentry=None
-    self.lindexentry=None
-    self.gentry=None
-    self.Aeentry=None
-    self.leentry=None
-    self.ncentry=None
-    self.centry=None
+    self.fentry=Entry(self)
+    self.murentry=Entry(self)
+    self.nlayerentry=Entry(self)
+    self.hentry=Entry(self)
+    self.sentry=Entry(self)
+    self.wentry=Entry(self)
+    self.mentry=Entry(self)
+    self.nwindingentry=Entry(self)
+    self.wstyleentry=Entry(self)
+    self.lindexentry=Entry(self)
+    self.gentry=Entry(self)
+    self.Aeentry=Entry(self)
+    self.leentry=Entry(self)
+    self.ncentry=Entry(self)
+    self.centry=Entry(self)
+
+    self.createentries()
 
     #create dictionary of input values
     self.entries={}
@@ -76,7 +82,6 @@ class GUI(Frame):
 
     #call functions to display interface
     self.printlabels()
-    self.createentries()
     self.entrygrid()
     self.createbuttons()
 
@@ -97,8 +102,12 @@ class GUI(Frame):
     self.askopenfilename()
     f=open(self.geofilename,'r')
     for line in f:
-      self.entries[line.split()[0]]=line.split()[2]
+      self.entries[line.split()[0]].insert(0,line.split()[2])
     f.close()
+
+  def resetgeom(self):
+    for key in self.entries.keys():
+      self.entries[key].delete(0,END)
     
   
     
@@ -157,14 +166,52 @@ class GUI(Frame):
   def createbuttons(self):
     Button(self,text='Load Geometry',command=self.loadgeom).grid(row=0,column=0)
     Button(self,text='Save Geometry',command=self.savegeom).grid(row=0,column=1)
-    Button(self,text='Reset Geometry').grid(row=0,column=2)
+    Button(self,text='Reset Geometry',command=self.resetgeom).grid(row=0,column=2)
     Button(self,text='Check Geometry Status').grid(row=16,columnspan=3)
     Button(self,text='Generate Netlist').grid(row=18,columnspan=3)
 
-  
+  def getImpe(self):
+
+    d=le*nc #effective length of the winding
+
+    #check length of input matrices
+    if NumofLayer!=len(h):
+      print 'NumofLayer mismatch with h, please revise #layer or #h'
+    if NumofLayer!=len(s):
+      print 'NumofLayer mismatch with h\s, please revise #layer or #s'
+
+    Xa=[]
+    Xb=[]
+    Xs=[]
+    for i1 in range(NumofLayer):
+      delta=(2/(f*2*math.pi)/mu0/sigma)**0.5
+      Psi=complex(1/delta,1/delta)
+      Z=Psi/sigma
+      A=cmath.exp(-Psi*h[i1])
+      Za=Z*(1-A)/(1+A)
+      Zb=Z*2*A/(1-A**2)
+      Xa.append(d/w[i1]*Za)
+      Xb.append(d/w[i1]*Zb)
+      Xs.append(complex(0,1)*(f*2*math.pi)*mu0*s[i1]*d/w[i1])
+
+    #impedance for the ferrite core
+    Xfb=complex(0,1)*(f*2*math.pi)*mu0*Ae/(g+Ae*w[i1]/(mur*c*d))
+    Xft=complex(0,1)*(f*2*math.pi)*mu0*mur*c*d/w[i1]
+
+    #calculate output
+    Ra=numpy.array([e.real for e in Xa])
+    La=numpy.array([e.imag for e in Xa])/(f*2*math.pi)
+    Rb=numpy.array([e.real for e in Xb])
+    Lb=numpy.array([e.imag for e in Xb])/(f*2*math.pi)
+    Ls=numpy.array([e.imag for e in Xs])/(f*2*math.pi)
+    Lfb=Xfb.imag/(f*2*math.pi)
+    Lft=Xft.imag/(f*2*math.pi)
+
+    return [Ra,La,Rb,Lb,Ls,Lfb,Lft]
+    
 
 
 if __name__=='__main__':
   root=Tk()
-  GUI(root).pack()
+  GUI(root).grid()
   root.mainloop()
