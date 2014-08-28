@@ -3,7 +3,7 @@ from ttk import *
 import tkFileDialog
 import tkMessageBox
 import math
-import literal_eval
+from ast import literal_eval
 
 SIGMA=5.8e7
 MU0=4*math.pi*1e-7
@@ -174,20 +174,20 @@ class GUI(Frame):
 
   def entrygrid(self):
     self.fentry.grid(column=1,row=1,sticky=(W,E),columnspan=2)
-    self.murentry.grid(column=1,row=2,sticky=W,columnspan=2)
-    self.nlayerentry.grid(column=1,row=3,sticky=W,columnspan=2)
-    self.hentry.grid(column=1,row=4,sticky=W,columnspan=2)
-    self.sentry.grid(column=1,row=5,sticky=W,columnspan=2)
-    self.wentry.grid(column=1,row=6,sticky=W,columnspan=2)
-    self.mentry.grid(column=1,row=7,sticky=W,columnspan=2)
-    self.nwindingentry.grid(column=1,row=8,sticky=W,columnspan=2)
-    self.wstyleentry.grid(column=1,row=9,sticky=W,columnspan=2)
-    self.lindexentry.grid(column=1,row=10,sticky=W,columnspan=2)
-    self.gentry.grid(column=1,row=11,sticky=W,columnspan=2)
-    self.Aeentry.grid(column=1,row=12,sticky=W,columnspan=2)
-    self.leentry.grid(column=1,row=13,sticky=W,columnspan=2)
-    self.ncentry.grid(column=1,row=14,sticky=W,columnspan=2)
-    self.centry.grid(column=1,row=15,sticky=W,columnspan=2)
+    self.murentry.grid(column=1,row=2,sticky=(W,E),columnspan=2)
+    self.nlayerentry.grid(column=1,row=3,sticky=(W,E),columnspan=2)
+    self.hentry.grid(column=1,row=4,sticky=(W,E),columnspan=2)
+    self.sentry.grid(column=1,row=5,sticky=(W,E),columnspan=2)
+    self.wentry.grid(column=1,row=6,sticky=(W,E),columnspan=2)
+    self.mentry.grid(column=1,row=7,sticky=(W,E),columnspan=2)
+    self.nwindingentry.grid(column=1,row=8,sticky=(W,E),columnspan=2)
+    self.wstyleentry.grid(column=1,row=9,sticky=(W,E),columnspan=2)
+    self.lindexentry.grid(column=1,row=10,sticky=(W,E),columnspan=2)
+    self.gentry.grid(column=1,row=11,sticky=(W,E),columnspan=2)
+    self.Aeentry.grid(column=1,row=12,sticky=(W,E),columnspan=2)
+    self.leentry.grid(column=1,row=13,sticky=(W,E),columnspan=2)
+    self.ncentry.grid(column=1,row=14,sticky=(W,E),columnspan=2)
+    self.centry.grid(column=1,row=15,sticky=(W,E),columnspan=2)
 
   def createbuttons(self):
     Button(self,text='Load Geometry',command=self.loadgeom).grid(row=0,column=0)
@@ -348,5 +348,10 @@ class GUI(Frame):
 
 if __name__=='__main__':
   root=Tk()
-  GUI(root).grid()
+  mainframe=GUI(root)
+  mainframe.grid()
+  mainframe.columnconfigure(0,weight=1,minsize=150)
+  mainframe.columnconfigure(1,weight=1,minsize=150)
+  mainframe.columnconfigure(2,weight=1,minsize=150)
+  for child in mainframe.winfo_children(): child.grid_configure(padx=3, pady=3)
   root.mainloop()
