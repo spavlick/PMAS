@@ -3,6 +3,8 @@ from ttk import *
 import tkFileDialog
 import tkMessageBox
 import math
+import cmath
+import numpy
 from ast import literal_eval
 
 SIGMA=5.8e7
@@ -114,6 +116,7 @@ class GUI(Frame):
     f.close()
 
   def loadgeom(self):
+    self.resetgeom()
     self.askopengeofilename()
     f=open(self.geofilename,'r')
     for line in f:
@@ -249,6 +252,7 @@ class GUI(Frame):
     s=literal_eval(self.s.get())
     w=literal_eval(self.w.get())
     m=literal_eval(self.m.get())
+    WindingStyle=literal_eval(self.wstyle.get())
     g=float(self.g.get())
     Ae=float(self.Ae.get())
     le=float(self.le.get())

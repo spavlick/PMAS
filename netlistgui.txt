@@ -1,0 +1,2 @@
+*Summary of the Transformer Structure in the I/O Ports
+*There are 2 Windings in total
