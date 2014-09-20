@@ -248,7 +248,7 @@ class GUI(Frame):
     h=literal_eval(self.h.get())
     s=literal_eval(self.s.get())
     w=literal_eval(self.w.get())
-    m=float(self.m.get())
+    m=literal_eval(self.m.get())
     g=float(self.g.get())
     Ae=float(self.Ae.get())
     le=float(self.le.get())
