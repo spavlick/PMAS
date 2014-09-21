@@ -253,6 +253,7 @@ class GUI(Frame):
     w=literal_eval(self.w.get())
     m=literal_eval(self.m.get())
     WindingStyle=literal_eval(self.wstyle.get())
+    WindingIndex=literal_eval(self.lindex.get())
     g=float(self.g.get())
     Ae=float(self.Ae.get())
     le=float(self.le.get())
@@ -285,11 +286,11 @@ class GUI(Frame):
 
     #Generate the SPICE netlist
     for index in range(NumofLayer):
-      ra=Ra[index]
-      la=La[index]
-      rb=Rb[index]
-      lb=Lb[index]
-      ls=Ls[index]
+      ra=self.Ra[index]
+      la=self.La[index]
+      rb=self.Rb[index]
+      lb=self.Lb[index]
+      ls=self.Ls[index]
       mx=m[index]
 
       f.write('\n*NetList for Layer {}'.format(index+1))
@@ -307,8 +308,8 @@ class GUI(Frame):
     #Print the ferrite cores
     f.write('\n*******************************')
     f.write('\n*NetList for Top and Bottom Ferrites')
-    f.write('\nLft T1 G {:14.2f}u'.format(Lft*1e6))
-    f.write('\nLfb T{} G {:14.2f}u'.format(NumofLayer+1,Lfb*1e6))
+    f.write('\nLft T1 G {:14.2f}u'.format(self.Lft*1e6))
+    f.write('\nLfb T{} G {:14.2f}u'.format(NumofLayer+1,self.Lfb*1e6))
 
     #Print the external connections
     f.write('\n**************************')
