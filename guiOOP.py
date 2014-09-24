@@ -12,21 +12,27 @@ MU0=4*math.pi*1e-7
 
 class GUI(Frame):
   def __init__(self,root):
-    Frame.__init__(self,root)
+    self.root=root
+    Frame.__init__(self,self.root)
 
-    root.title('Planar Magnetics Analyzing System (PMAS)')
+    self.root.title('Planar Magnetics Analyzing System (PMAS)')
+
+    #self.canvas=Canvas(self)
+    #self.scrollbar=Scrollbar(self.root,orient=VERTICAL,command=self.canvas.yview)
+    #self.scrollbar.pack(side=RIGHT,fill=Y)
+    #self.canvas['yscrollcommand']=self.scrollbar.set
 
     self.file_opt=options={}
     options['defaultextension']='.txt'
     options['filetypes']=[('all files','.*'),('text files','.txt')]
     options['initialdir']='C:\\'
     options['initialfile']='file.txt'
-    options['parent']=root
+    options['parent']=self.root
 
     self.dir_opt=options={}
     options['initialdir']='C:\\'
     options['mustexist']=False
-    options['parent']=root
+    options['parent']=self.root
 
     #initialize variables for GUI input
     self.f=StringVar() #switching frequency
@@ -46,22 +52,25 @@ class GUI(Frame):
     self.c=StringVar() #thickness of top and bottom ferrite
 
     #create variables for entry objects
-    self.fentry=Entry(self)
-    self.murentry=Entry(self)
-    self.nlayerentry=Entry(self)
-    self.hentry=Entry(self)
-    self.sentry=Entry(self)
-    self.wentry=Entry(self)
-    self.mentry=Entry(self)
-    self.nwindingentry=Entry(self)
-    self.wstyleentry=Entry(self)
-    self.lindexentry=Entry(self)
-    self.gentry=Entry(self)
-    self.Aeentry=Entry(self)
-    self.leentry=Entry(self)
-    self.ncentry=Entry(self)
-    self.centry=Entry(self)
+    self.fentry=None
+    self.murentry=None
+    self.nlayerentry=None
+    self.hentry=None
+    self.sentry=None
+    self.wentry=None
+    self.mentry=None
+    self.nwindingentry=None
+    self.wstyleentry=None
+    self.lindexentry=None
+    self.gentry=None
+    self.Aeentry=None
+    self.leentry=None
+    self.ncentry=None
+    self.centry=None
 
+    #call functions to display interface
+    self.createbuttons()
+    self.printlabels()
     self.createentries()
 
     #create dictionary of input values
@@ -95,9 +104,9 @@ class GUI(Frame):
     self.Lft=None
 
     #call functions to display interface
-    self.printlabels()
-    self.entrygrid()
     self.createbuttons()
+    self.printlabels()
+
 
   def askopengeofilename(self):
     self.geofilename=tkFileDialog.askopenfilename(**self.file_opt)
@@ -132,13 +141,13 @@ class GUI(Frame):
     nlayer=int(self.nlayer.get())   
 
     if nwinding!= max(literal_eval(self.lindex.get())):
-      tkMessageBox.showerror('NumofWinding and WindingIndex do not match')
+      tkMessageBox.showerror(message='NumofWinding and WindingIndex do not match')
     if nwinding!= len(literal_eval(self.wstyle.get())):
-      tkMessageBox.showerror('NumofWinding and WindingStyle do not match')
+      tkMessageBox.showerror(message='NumofWinding and WindingStyle do not match')
     if nlayer!=len(literal_eval(self.h.get())):
-      tkMessageBox.showerror('NumofLayer mismatch with h, please revise #layer or #h')
+      tkMessageBox.showerror(message='NumofLayer mismatch with h, please revise #layer or #h')
     if nlayer!=len(literal_eval(self.s.get())):
-      tkMessageBox.showerror('NumofLayer mismatch with h\s, please revise #layer or #s')
+      tkMessageBox.showerror(message='NumofLayer mismatch with h\s, please revise #layer or #s')
     
 
   def printlabels(self):
@@ -158,61 +167,62 @@ class GUI(Frame):
     Label(self,text='Number of Cores (nc)').grid(column=0,row=14,sticky=W)
     Label(self,text='Thickness of the Top and Bottom Core (c)').grid(column=0,row=15,sticky=W)
 
-    Label(self,text='Unit: kHz').grid(column=3,row=1,sticky=W)
-    Label(self,text='Unit: 1').grid(column=3,row=2,sticky=W)
-    Label(self,text='Unit: 1').grid(column=3,row=3,sticky=W)
-    Label(self,text='Unit: m').grid(column=3,row=4,sticky=W)
-    Label(self,text='Unit: m').grid(column=3,row=5,sticky=W)
-    Label(self,text='Unit: m').grid(column=3,row=6,sticky=W)
-    Label(self,text='Unit: 1').grid(column=3,row=7,sticky=W)
-    Label(self,text='Unit: 1').grid(column=3,row=8,sticky=W)
-    Label(self,text='1=parallel, 0=series').grid(column=3,row=9,sticky=W)
-    Label(self,text='Unit: 1').grid(column=3,row=10,sticky=W)
-    Label(self,text='Unit: m').grid(column=3,row=11,sticky=W)
-    Label(self,text='Unit: m^2').grid(column=3,row=12,sticky=W)
-    Label(self,text='Unit: m').grid(column=3,row=13,sticky=W)
-    Label(self,text='Unit: 1').grid(column=3,row=14,sticky=W)
-    Label(self,text='Unit: m').grid(column=3,row=15,sticky=W)
+    Label(self,text='Unit: kHz').grid(column=2,row=1,sticky=W)
+    Label(self,text='Unit: 1').grid(column=2,row=2,sticky=W)
+    Label(self,text='Unit: 1').grid(column=2,row=3,sticky=W)
+    Label(self,text='Unit: m').grid(column=2,row=4,sticky=W)
+    Label(self,text='Unit: m').grid(column=2,row=5,sticky=W)
+    Label(self,text='Unit: m').grid(column=2,row=6,sticky=W)
+    Label(self,text='Unit: 1').grid(column=2,row=7,sticky=W)
+    Label(self,text='Unit: 1').grid(column=2,row=8,sticky=W)
+    Label(self,text='1=parallel, 0=series').grid(column=2,row=9,sticky=W)
+    Label(self,text='Unit: 1').grid(column=2,row=10,sticky=W)
+    Label(self,text='Unit: m').grid(column=2,row=11,sticky=W)
+    Label(self,text='Unit: m^2').grid(column=2,row=12,sticky=W)
+    Label(self,text='Unit: m').grid(column=2,row=13,sticky=W)
+    Label(self,text='Unit: 1').grid(column=2,row=14,sticky=W)
+    Label(self,text='Unit: m').grid(column=2,row=15,sticky=W)
 
 
   def createentries(self):
-    self.fentry=Entry(self,width=15,textvariable=self.f)
-    self.murentry=Entry(self,width=15,textvariable=self.mur)
-    self.nlayerentry=Entry(self,width=15,textvariable=self.nlayer)
-    self.hentry=Entry(self,width=15,textvariable=self.h)
-    self.sentry=Entry(self,width=15,textvariable=self.s)
-    self.wentry=Entry(self,width=15,textvariable=self.w)
-    self.mentry=Entry(self,width=15,textvariable=self.m)
-    self.nwindingentry=Entry(self,width=15,textvariable=self.nwinding)
-    self.wstyleentry=Entry(self,width=15,textvariable=self.wstyle)
-    self.lindexentry=Entry(self,width=15,textvariable=self.lindex)
-    self.gentry=Entry(self,width=15,textvariable=self.g)
-    self.Aeentry=Entry(self,width=15,textvariable=self.Ae)
-    self.leentry=Entry(self,width=15,textvariable=self.le)
-    self.ncentry=Entry(self,width=15,textvariable=self.nc)
-    self.centry=Entry(self,width=15,textvariable=self.c)
+    self.fentry=Entry(self,textvariable=self.f)
+    self.murentry=Entry(self,textvariable=self.mur)
+    self.nlayerentry=Entry(self,textvariable=self.nlayer)
+    self.hentry=Entry(self,textvariable=self.h)
+    self.sentry=Entry(self,textvariable=self.s)
+    self.wentry=Entry(self,textvariable=self.w)
+    self.mentry=Entry(self,textvariable=self.m)
+    self.nwindingentry=Entry(self,textvariable=self.nwinding)
+    self.wstyleentry=Entry(self,textvariable=self.wstyle)
+    self.lindexentry=Entry(self,textvariable=self.lindex)
+    self.gentry=Entry(self,textvariable=self.g)
+    self.Aeentry=Entry(self,textvariable=self.Ae)
+    self.leentry=Entry(self,textvariable=self.le)
+    self.ncentry=Entry(self,textvariable=self.nc)
+    self.centry=Entry(self,textvariable=self.c)
 
-  def entrygrid(self):
-    self.fentry.grid(column=1,row=1,sticky=(W,E),columnspan=2)
-    self.murentry.grid(column=1,row=2,sticky=(W,E),columnspan=2)
-    self.nlayerentry.grid(column=1,row=3,sticky=(W,E),columnspan=2)
-    self.hentry.grid(column=1,row=4,sticky=(W,E),columnspan=2)
-    self.sentry.grid(column=1,row=5,sticky=(W,E),columnspan=2)
-    self.wentry.grid(column=1,row=6,sticky=(W,E),columnspan=2)
-    self.mentry.grid(column=1,row=7,sticky=(W,E),columnspan=2)
-    self.nwindingentry.grid(column=1,row=8,sticky=(W,E),columnspan=2)
-    self.wstyleentry.grid(column=1,row=9,sticky=(W,E),columnspan=2)
-    self.lindexentry.grid(column=1,row=10,sticky=(W,E),columnspan=2)
-    self.gentry.grid(column=1,row=11,sticky=(W,E),columnspan=2)
-    self.Aeentry.grid(column=1,row=12,sticky=(W,E),columnspan=2)
-    self.leentry.grid(column=1,row=13,sticky=(W,E),columnspan=2)
-    self.ncentry.grid(column=1,row=14,sticky=(W,E),columnspan=2)
-    self.centry.grid(column=1,row=15,sticky=(W,E),columnspan=2)
+    self.fentry.grid(column=1,row=1,sticky=(W,E))
+    self.murentry.grid(column=1,row=2,sticky=(W,E))
+    self.nlayerentry.grid(column=1,row=3,sticky=(W,E))
+    self.hentry.grid(column=1,row=4,sticky=(W,E))
+    self.sentry.grid(column=1,row=5,sticky=(W,E))
+    self.wentry.grid(column=1,row=6,sticky=(W,E))
+    self.mentry.grid(column=1,row=7,sticky=(W,E))
+    self.nwindingentry.grid(column=1,row=8,sticky=(W,E))
+    self.wstyleentry.grid(column=1,row=9,sticky=(W,E))
+    self.lindexentry.grid(column=1,row=10,sticky=(W,E))
+    self.gentry.grid(column=1,row=11,sticky=(W,E))
+    self.Aeentry.grid(column=1,row=12,sticky=(W,E))
+    self.leentry.grid(column=1,row=13,sticky=(W,E))
+    self.ncentry.grid(column=1,row=14,sticky=(W,E))
+    self.centry.grid(column=1,row=15,sticky=(W,E))
 
   def createbuttons(self):
-    Button(self,text='Load Geometry',command=self.loadgeom).grid(row=0,column=0)
-    Button(self,text='Save Geometry',command=self.savegeom).grid(row=0,column=1)
-    Button(self,text='Reset Geometry',command=self.resetgeom).grid(row=0,column=2)
+    buttonframe=Frame(self)
+    Button(buttonframe,text='Load Geometry',command=self.loadgeom).pack(side=LEFT,padx=5)
+    Button(buttonframe,text='Save Geometry',command=self.savegeom).pack(side=LEFT,padx=5)
+    Button(buttonframe,text='Reset Geometry',command=self.resetgeom).pack(side=LEFT,padx=5)
+    buttonframe.grid(row=0, columnspan=3)
     Button(self,text='Check Geometry Status',command=self.checkgeom).grid(row=16,columnspan=3)
     Button(self,text='Generate Netlist',command=self.generate_netlist).grid(row=18,columnspan=3)
 
@@ -372,8 +382,5 @@ if __name__=='__main__':
   root=Tk()
   mainframe=GUI(root)
   mainframe.grid()
-  mainframe.columnconfigure(0,weight=1,minsize=150)
-  mainframe.columnconfigure(1,weight=1,minsize=150)
-  mainframe.columnconfigure(2,weight=1,minsize=150)
   for child in mainframe.winfo_children(): child.grid_configure(padx=3, pady=3)
   root.mainloop()
