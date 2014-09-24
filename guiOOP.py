@@ -142,8 +142,8 @@ class GUI(Frame):
     
 
   def printlabels(self):
-    Label(self,text='Fundamental Frequency (kHz)').grid(column=0,row=1,sticky=W)
-    Label(self,text='Relative Permeability').grid(column=0,row=2,sticky=W)
+    Label(self,text='Fundamental Frequency (f)').grid(column=0,row=1,sticky=W)
+    Label(self,text='Relative Permeability (mu)').grid(column=0,row=2,sticky=W)
     Label(self,text='Number of Layers (nlayer)').grid(column=0,row=3,sticky=W)
     Label(self,text='Layer Thickness (h)').grid(column=0,row=4,sticky=W)
     Label(self,text='Spacing Thickness (s)').grid(column=0,row=5,sticky=W)
@@ -152,11 +152,28 @@ class GUI(Frame):
     Label(self,text='Number of Windings (nwinding)').grid(column=0,row=8,sticky=W)
     Label(self,text='Connection Style of Each Winding (wstyle)').grid(column=0,row=9,sticky=W)
     Label(self,text='Belongings of Each Layer to Windings (lindex)').grid(column=0,row=10,sticky=W)
-    Label(self,text='Core Gap Length (mm)').grid(column=0,row=11,sticky=W)
-    Label(self,text='Effective Core Area (m^2)').grid(column=0,row=12,sticky=W)
-    Label(self,text='Effective Length (m)').grid(column=0,row=13,sticky=W)
-    Label(self,text='Number of Cores').grid(column=0,row=14,sticky=W)
-    Label(self,text='Thickness of the Top and Bottom Core (m)').grid(column=0,row=15,sticky=W)
+    Label(self,text='Core Gap Length (g)').grid(column=0,row=11,sticky=W)
+    Label(self,text='Effective Core Area (Ac)').grid(column=0,row=12,sticky=W)
+    Label(self,text='Effective Length (d)').grid(column=0,row=13,sticky=W)
+    Label(self,text='Number of Cores (nc)').grid(column=0,row=14,sticky=W)
+    Label(self,text='Thickness of the Top and Bottom Core (c)').grid(column=0,row=15,sticky=W)
+
+    Label(self,text='Unit: kHz').grid(column=3,row=1,sticky=W)
+    Label(self,text='Unit: 1').grid(column=3,row=2,sticky=W)
+    Label(self,text='Unit: 1').grid(column=3,row=3,sticky=W)
+    Label(self,text='Unit: m').grid(column=3,row=4,sticky=W)
+    Label(self,text='Unit: m').grid(column=3,row=5,sticky=W)
+    Label(self,text='Unit: m').grid(column=3,row=6,sticky=W)
+    Label(self,text='Unit: 1').grid(column=3,row=7,sticky=W)
+    Label(self,text='Unit: 1').grid(column=3,row=8,sticky=W)
+    Label(self,text='1=parallel, 0=series').grid(column=3,row=9,sticky=W)
+    Label(self,text='Unit: 1').grid(column=3,row=10,sticky=W)
+    Label(self,text='Unit: m').grid(column=3,row=11,sticky=W)
+    Label(self,text='Unit: m^2').grid(column=3,row=12,sticky=W)
+    Label(self,text='Unit: m').grid(column=3,row=13,sticky=W)
+    Label(self,text='Unit: 1').grid(column=3,row=14,sticky=W)
+    Label(self,text='Unit: m').grid(column=3,row=15,sticky=W)
+
 
   def createentries(self):
     self.fentry=Entry(self,width=15,textvariable=self.f)
