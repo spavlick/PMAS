@@ -141,13 +141,21 @@ class GUI(Frame):
     nlayer=int(self.nlayer.get())   
 
     if nwinding!= max(literal_eval(self.lindex.get())):
-      tkMessageBox.showerror(message='NumofWinding and WindingIndex do not match')
-    if nwinding!= len(literal_eval(self.wstyle.get())):
-      tkMessageBox.showerror(message='NumofWinding and WindingStyle do not match')
-    if nlayer!=len(literal_eval(self.h.get())):
-      tkMessageBox.showerror(message='NumofLayer mismatch with h, please revise #layer or #h')
-    if nlayer!=len(literal_eval(self.s.get())):
-      tkMessageBox.showerror(message='NumofLayer mismatch with h\s, please revise #layer or #s')
+        tkMessageBox.showerror(message='nwinding mismatch with lindex')
+    elif nwinding!= len(literal_eval(self.wstyle.get())):
+        tkMessageBox.showerror(message='nwinding mismatch with wstyle')
+    elif nlayer!=len(literal_eval(self.h.get())):
+        tkMessageBox.showerror(message='nlayer mismatch with h')
+    elif nlayer!=len(literal_eval(self.s.get())):
+        tkMessageBox.showerror(message='nlayer mismatch with s')
+    elif nlayer!=len(literal_eval(self.w.get())):
+        tkMessageBox.showerror(message='nlayer mismatch with w')
+    elif nlayer!=len(literal_eval(self.lindex.get())):
+        tkMessageBox.showerror(message='nlayer mismatch with lindex')
+    elif nlayer!=len(literal_eval(self.m.get())):
+        tkMessageBox.showerror(message='nlayer mismatch with m')
+    else:
+        tkMessageBox.showerror(message='Geometry Format is Correct')
     
 
   def printlabels(self):
@@ -167,21 +175,21 @@ class GUI(Frame):
     Label(self,text='Number of Cores (nc)').grid(column=0,row=14,sticky=W)
     Label(self,text='Thickness of the Top and Bottom Core (c)').grid(column=0,row=15,sticky=W)
 
-    Label(self,text='Unit: kHz').grid(column=2,row=1,sticky=W)
+    Label(self,text='Unit: Hz').grid(column=2,row=1,sticky=W)
     Label(self,text='Unit: 1').grid(column=2,row=2,sticky=W)
     Label(self,text='Unit: 1').grid(column=2,row=3,sticky=W)
-    Label(self,text='Unit: m').grid(column=2,row=4,sticky=W)
-    Label(self,text='Unit: m').grid(column=2,row=5,sticky=W)
-    Label(self,text='Unit: m').grid(column=2,row=6,sticky=W)
+    Label(self,text='Unit: meters').grid(column=2,row=4,sticky=W)
+    Label(self,text='Unit: meters').grid(column=2,row=5,sticky=W)
+    Label(self,text='Unit: meters').grid(column=2,row=6,sticky=W)
     Label(self,text='Unit: 1').grid(column=2,row=7,sticky=W)
     Label(self,text='Unit: 1').grid(column=2,row=8,sticky=W)
     Label(self,text='1=parallel, 0=series').grid(column=2,row=9,sticky=W)
-    Label(self,text='Unit: 1').grid(column=2,row=10,sticky=W)
-    Label(self,text='Unit: m').grid(column=2,row=11,sticky=W)
-    Label(self,text='Unit: m^2').grid(column=2,row=12,sticky=W)
-    Label(self,text='Unit: m').grid(column=2,row=13,sticky=W)
+    Label(self,text='Winding index').grid(column=2,row=10,sticky=W)
+    Label(self,text='Unit: meters').grid(column=2,row=11,sticky=W)
+    Label(self,text='Unit: meter^2').grid(column=2,row=12,sticky=W)
+    Label(self,text='Unit: meters').grid(column=2,row=13,sticky=W)
     Label(self,text='Unit: 1').grid(column=2,row=14,sticky=W)
-    Label(self,text='Unit: m').grid(column=2,row=15,sticky=W)
+    Label(self,text='Unit: meters').grid(column=2,row=15,sticky=W)
 
 
   def createentries(self):
@@ -375,7 +383,7 @@ class GUI(Frame):
     f.write('\n***************************')
     f.write('\n*This is the END of the Netlist')
     f.close()
-    
+    tkMessageBox.showerror(message='Successfully Generated Netlist')
 
 
 if __name__=='__main__':
