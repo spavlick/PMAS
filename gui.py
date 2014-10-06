@@ -204,7 +204,7 @@ class GUI(Frame):
     Label(self,text='e.g.: 4').grid(column=4,row=3,sticky=W)
     Label(self,text='e.g.: [1e-3,1e-3,1e-3,1e-3]').grid(column=4,row=4,sticky=W)
     Label(self,text='e.g.: [1e-3,1e-3,1e-3,1e-3,1e-3]').grid(column=4,row=5,sticky=W)
-    Label(self,text='e.g.: 5e-3').grid(column=4,row=6,sticky=W)
+    Label(self,text='e.g.: [5e-3,5e-3,5e-3,5e-3]').grid(column=4,row=6,sticky=W)
     Label(self,text='e.g.: [1,1,2,2]').grid(column=4,row=7,sticky=W)
     Label(self,text='e.g.: 2').grid(column=4,row=8,sticky=W)
     Label(self,text='e.g.: [1,0]').grid(column=4,row=9,sticky=W)
