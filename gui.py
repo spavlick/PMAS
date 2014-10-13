@@ -5,6 +5,8 @@ import tkMessageBox
 import math
 import cmath
 import numpy
+import time
+import getpass
 from ast import literal_eval
 
 MU0=4*math.pi*1e-7
@@ -14,7 +16,7 @@ class GUI(Frame):
     self.root=root
     Frame.__init__(self,self.root)
 
-    self.root.title('1D Planar Magnetics Netlist Generator (PMNG)')
+    self.root.title('Planar Magnetics Analyzing Tool (PLAMAT)')
 
     #self.canvas=Canvas(self)
     #self.scrollbar=Scrollbar(self.root,orient=VERTICAL,command=self.canvas.yview)
@@ -345,10 +347,19 @@ class GUI(Frame):
     Serieslayers={}
     #Repeat and summarizing the input information
     f=open(self.netlistfilename,'w')
-    f.write('********************************************************************')
+    
+    #Generate netlist identification information
+    localtime = time.asctime( time.localtime(time.time()))
+    user = getpass.getuser()
+    f.write('\n******************************************************************')
+    f.write('\n*        {0}    by {1}'.format(localtime,user))
+    f.write('\n******************************************************************')
+    
+    #Start describing the transformer structure
+    f.write('\n******************************************************************')
     f.write('\n*******     Summary of the Transformer Structure     *************')
-    f.write('\n*There are {} Windings in total:'.format(NumofWinding))
-
+    f.write('\n******************************************************************')
+    f.write('\n\n* This planar structure has {0} windings and {1} layers'.format(NumofWinding, NumofLayer))
 
     for index_winding in range(NumofWinding):
         #Parallel Connected
@@ -357,9 +368,10 @@ class GUI(Frame):
         totalturn=0
         for index_layer in range(NumofLayer):
           if WindingIndex[index_layer]==index_winding+1:
-            f.write('\n* --> Includes Layer {}, thickness {}, width {}, turns {}, spacing above {}, spacing below {}'.format(index_layer+1, h[index_layer], w[index_layer], m[index_layer], s[index_layer], s[index_layer+1]))
+            f.write('\n* --> Includes Layer {}'.format(index_layer+1))
+            f.write('\n* ---> thickness {}, width {}, turns {}, spacing above {:4.2f}m, spacing below {:4.2f}m'.format(h[index_layer], w[index_layer], m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
             totalturn=totalturn+m[index_layer]
-        f.write('\n* -> Winding {0} has {1} total turns; Port Name: PortP{0}, PortN{0}'.format(index_winding+1, totalturn))
+        f.write('\n* -> Winding {0} has {1} total turns; \n* --> External Port Name: PortP{0}, PortN{0}'.format(index_winding+1, totalturn))
 
     
         #Series Connected
@@ -369,16 +381,17 @@ class GUI(Frame):
         totalturn=0
         for index_layer in range(NumofLayer):
           if WindingIndex[index_layer]==index_winding+1:
-            f.write('\n* --> Includes Layer {}, thickness {}, width {}, turns {}, spacing above {}, spacing below {}'.format(index_layer+1,h[index_layer], w[index_layer], m[index_layer], s[index_layer], s[index_layer+1]))
+            f.write('\n* --> Includes Layer {}'.format(index_layer+1))
+            f.write('\n* ---> thickness {}, width {}, turns {}, spacing above {:4.2f}m, spacing below {:4.2f}m'.format(h[index_layer], w[index_layer], m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
             numSeriesLayers+=1
             totalturn=totalturn+m[index_layer]
-        f.write('\n* -> Winding {0} has {1} total turns; Port Name: PortP{0}, PortN{0}'.format(index_winding+1, totalturn))
+        f.write('\n* -> Winding {0} has {1} total turns; \n* --> External Port Name: PortP{0}, PortN{0}'.format(index_winding+1, totalturn))
 
     f.write('\n******************************************************************\n')
 
-    f.write('\n*****************************')
-    f.write('\n***** Netlist Starts ********')
-    f.write('\n*****************************')
+    f.write('\n******************************************************************')
+    f.write('\n*****                   Netlist Starts                    ********')
+    f.write('\n******************************************************************')
 
     #Generate the SPICE netlist
     for index in range(NumofLayer):
@@ -402,50 +415,51 @@ class GUI(Frame):
       f.write('\nK{0} Le{0} Li{0} 1'.format(index))
 
     #Print the ferrite cores and top spacing
-    f.write('\n\n*******************************')
-    f.write('\n*NetList for Top and Bottom Ferrites')
+    f.write('\n\n*NetList for Top and Bottom Ferrites, as well as the First Spacing on Top Side')
     f.write('\nLft T0 G {:14.2f}u'.format(self.Lft*1e6))
     f.write('\nLfb T{} G {:14.2f}u'.format(NumofLayer+1,self.Lfb*1e6))
     f.write('\nLs0 T1 T0 {:14.2f}n'.format(self.Lts*1e9))
 
     #Print the external connections
-    f.write('\n**************************')
-    f.write('\n*Winding Connections')
-    f.write('\n*Using 1n ohm resistors')
+    f.write('\n\n*NetList for Winding Interconnects')
+    f.write('\n*A few 1n ohm resistors are used as short interconnects')
 
     #Create External Winding Ports
     for index_winding in range(NumofWinding):
       #Parallel Connected
       if WindingStyle[index_winding]==1:
-        f.write('\n\n*Winding {} is Parallel Connected'.format(index_winding+1))
+        f.write('\n\n* -> Winding {} is Parallel Connected'.format(index_winding+1))
         for index_layer in range(NumofLayer):
           if WindingIndex[index_layer]==index_winding+1:
-            f.write('\n*Include layer {}'.format(index_layer+1))
+            f.write('\n* -->Include layer {}'.format(index_layer+1))
             f.write('\nRexP{0} PortP{1} P{0}    1n'.format(index_layer+1,index_winding+1))
             f.write('\nRexN{0} PortN{1} N{0}    1n'.format(index_layer+1,index_winding+1))
 
 
       #Series Connected
       if WindingStyle[index_winding]==0:
-        f.write('\n\n*Winding {} is Series Connected'.format(index_winding+1))
+        f.write('\n\n* -> Winding {} is Series Connected'.format(index_winding+1))
         
         #identify which layers it contains
         numSeriesLayers=1
         for index_layer in range(NumofLayer):
           if WindingIndex[index_layer]==index_winding+1:
-            f.write('\n*Include layer {}'.format(index_layer+1))
+            f.write('\n* -->Include layer {}'.format(index_layer+1))
             Serieslayers[numSeriesLayers]=index_layer+1
             numSeriesLayers+=1
+        #defining two wires from external port to the front and end layers
         f.write('\nRexP{0} PortP{1} P{0}    1n'.format(Serieslayers[1],index_winding+1))
         f.write('\nRexN{0} PortN{1} N{0}    1n'.format(Serieslayers[numSeriesLayers-1],index_winding+1))
+        #defining the interconnects among series connected layers
         for index_SeriesLayers in range(numSeriesLayers-2):
           f.write('\nRexM{0} N{0} P{1}      1n'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2]))
 
 
 
     #netlist finalized
-    f.write('\n\n***************************')
-    f.write('\n*This is the END of the Netlist')
+    f.write('\n******************************************************************')
+    f.write('\n*****                   Netlist Ends                      ********')
+    f.write('\n******************************************************************')
     f.close()
     tkMessageBox.showinfo(message='Successfully Generated Netlist')
 
