@@ -14,7 +14,7 @@ MU0=4*math.pi*1e-7
 class GUI(Frame):
   def __init__(self,root):
     self.root=root
-    Frame.__init__(self,self.root,width=300,height=300)
+    Frame.__init__(self,self.root)
 
     self.root.title('Planar Magnetics Analyzing Tool (PLAMAT)')
 
