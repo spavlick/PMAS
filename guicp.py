@@ -8,14 +8,9 @@ import numpy
 import time
 import getpass
 from ast import literal_eval
-import sys,os
+import sys
 
 MU0=4*math.pi*1e-7
-
-
-#fsock=open('error.log','w')
-#sys.stderr=fsock
-
 
 class GUI(Frame):
   def __init__(self,root):
@@ -23,6 +18,42 @@ class GUI(Frame):
     Frame.__init__(self,self.root)
 
     self.root.title('Planar Magnetics Analyzing Tool (PLAMAT)')
+
+    #write errors to log file
+    self.stderrredirect()
+
+    '''self.vscrollbar = Scrollbar(self, orient=VERTICAL)
+    self.vscrollbar.pack(fill=Y, side=RIGHT, expand=FALSE)
+    self.canvas = Canvas(self, bd=0, highlightthickness=0,
+                    yscrollcommand=self.vscrollbar.set)
+    self.canvas.pack(side=LEFT, fill=BOTH, expand=TRUE)
+    self.vscrollbar.config(command=self.canvas.yview)
+
+    # reset the view
+    self.canvas.xview_moveto(0)
+    self.canvas.yview_moveto(0)
+
+    # create a frame inside the canvas which will be scrolled with it
+    self.interior = interior = Frame(self.canvas)
+    interior_id = self.canvas.create_window(0, 0, window=interior,
+                                       anchor=NW)
+
+    # track changes to the canvas and frame width and sync them,
+    # also updating the scrollbar
+    def _configure_interior(event):
+        # update the scrollbars to match the size of the inner frame
+        size = (interior.winfo_reqwidth(), interior.winfo_reqheight())
+        self.canvas.config(scrollregion="0 0 %s %s" % size)
+        if interior.winfo_reqwidth() != self.canvas.winfo_width():
+            # update the canvas's width to fit the inner frame
+            self.canvas.config(width=interior.winfo_reqwidth())
+    interior.bind('<Configure>', _configure_interior)
+
+    def _configure_canvas(event):
+        if interior.winfo_reqwidth() != self.canvas.winfo_width():
+            # update the inner frame's width to fill the canvas
+            self.canvas.itemconfigure(interior_id, width=self.canvas.winfo_width())
+    self.canvas.bind('<Configure>', _configure_canvas)'''
 
 
     self.file_opt=options={}
@@ -116,9 +147,10 @@ class GUI(Frame):
     self.createbuttons()
     self.printlabels()
 
-  def OnFrameConfigure(self, event):
-    '''Reset the scroll region to encompass the inner frame'''
-    self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+  def stderrredirect(self):
+    fsock=open('error.log','w')
+    sys.stderr=fsock
+
 
     # ask for open geometry file name
   def askopengeofilename(self):
@@ -276,7 +308,7 @@ class GUI(Frame):
     Button(buttonframe,text='Reset Geometry',command=self.resetgeom).pack(side=LEFT,padx=5)
     buttonframe.grid(row=0, columnspan=5)
     Button(self,text='Check Geometry Status',command=self.checkgeom).grid(row=18,columnspan=5)
-    Button(self,text='Generate Netlist',command=self.generate_netlist).grid(row=20,columnspan=5)
+    Button(self,text='Generate Netlist',command=self.generate_netlist_errors).grid(row=20,columnspan=5)
 
   def getImpe(self):
     sigma=float(self.sigma.get())
@@ -461,44 +493,24 @@ class GUI(Frame):
 
 
 
-    #netlist finalized
-    f.write('\n******************************************************************')
-    f.write('\n*****                   Netlist Ends                      ********')
-    f.write('\n******************************************************************')
-    f.close()
-    tkMessageBox.showinfo(message='Successfully Generated Netlist')
-  
-  def generate_netlist_errors(self):
-    self.generate_netlist()
-    '''errorfile=open('error.log','r')
-    for line in errorfile:
-      tkMessageBox.showerror(message=line)'''
-
-class ScrollbarFrame(GUI):
-  def __init__(self,root):
-    self.root=root
-    GUI.__init__(self,self.root)
-
-    #creating canvas and additional frame for scrollbar
-    self.canvas = Canvas(self.root, borderwidth=0)
-    self.frame = Frame(self.canvas)
-    self.vsb = Scrollbar(self.root, orient="vertical", command=self.canvas.yview)
-    self.canvas.configure(yscrollcommand=self.vsb.set)
-
-    self.vsb.pack(side="right", fill="y")
-    self.canvas.pack(side="left", fill="both", expand=True)
-    self.canvas.create_window((4,4), window=self.frame, anchor="nw", 
-                              tags="self.frame")
-
-    self.frame.bind("<Configure>", self.OnFrameConfigure)
-
-  def OnFrameConfigure(self, event):
-    '''Reset the scroll region to encompass the inner frame'''
-    self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+      #netlist finalized
+      f.write('\n******************************************************************')
+      f.write('\n*****                   Netlist Ends                      ********')
+      f.write('\n******************************************************************')
+      f.close()
+      tkMessageBox.showinfo(message='Successfully Generated Netlist')
+    
+    def generate_netlist_errors(self):
+      try:
+        self.generate_netlist()
+      finally:
+        errorfile=open('error.log','r')
+        for line in errorfile:
+          tkMessageBox.showerror(message=line)
 
 if __name__=='__main__':
   root=Tk()
-  mainframe=ScrollbarFrame(root)
-  mainframe.pack(side="top", fill="both", expand=True)
-  #for child in mainframe.winfo_children(): child.grid_configure(padx=3, pady=3)
+  mainframe=GUI(root)
+  mainframe.grid()
+  for child in mainframe.winfo_children(): child.grid_configure(padx=3, pady=3)
   root.mainloop()

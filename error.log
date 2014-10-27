@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "gui.py", line 19, in <module>
+    class ScrollbarFrame(GUI):
+NameError: name 'GUI' is not defined
