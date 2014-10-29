@@ -470,8 +470,8 @@ class GUI(Frame):
   
   def generate_netlist_errors(self):
     self.generate_netlist()
-    '''errorfile=open('error.log','r')
-    for line in errorfile:
+    #errorfile=open('error.log','r')
+    '''for line in errorfile:
       tkMessageBox.showerror(message=line)'''
 
 class ScrollbarFrame(Frame):
@@ -480,12 +480,14 @@ class ScrollbarFrame(Frame):
     Frame.__init__(self, root)
     self.canvas = Canvas(root, borderwidth=0, background="#ffffff")
     self.frame = GUI(root)
+    self.hsb = Scrollbar(root, orient="horizontal", command=self.canvas.xview)
     self.vsb = Scrollbar(root, orient="vertical", command=self.canvas.yview)
-    self.canvas.configure(yscrollcommand=self.vsb.set)
+    self.canvas.configure(xscrollcommand=self.hsb.set,yscrollcommand=self.vsb.set)
 
     self.vsb.pack(side="right", fill="y")
-    self.canvas.pack(side="left", fill="both", expand=True)
-    self.canvas.create_window((4,4), window=self.frame, anchor="nw", 
+    self.hsb.pack(side="bottom",fill="x")
+    self.canvas.pack(side="top", fill="both", expand=True)
+    self.canvas.create_window((6,6), window=self.frame, anchor="nw", 
                               tags="self.frame")
 
     self.frame.bind("<Configure>", self.OnFrameConfigure)
