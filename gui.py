@@ -13,8 +13,8 @@ import sys,os
 MU0=4*math.pi*1e-7
 
 
-#fsock=open('error.log','w')
-#sys.stderr=fsock
+fsock=open('error.log','w')
+sys.stderr=fsock
 
 
 class GUI(Frame):
@@ -276,7 +276,7 @@ class GUI(Frame):
     Button(buttonframe,text='Reset Geometry',command=self.resetgeom).pack(side=LEFT,padx=5)
     buttonframe.grid(row=0, columnspan=5)
     Button(self,text='Check Geometry Status',command=self.checkgeom).grid(row=18,columnspan=5)
-    Button(self,text='Generate Netlist',command=self.generate_netlist).grid(row=20,columnspan=5)
+    Button(self,text='Generate Netlist',command=self.generate_netlist_errors).grid(row=20,columnspan=5)
 
   def getImpe(self):
     sigma=float(self.sigma.get())
@@ -470,9 +470,12 @@ class GUI(Frame):
   
   def generate_netlist_errors(self):
     self.generate_netlist()
-    #errorfile=open('error.log','r')
-    '''for line in errorfile:
-      tkMessageBox.showerror(message=line)'''
+ 
+    tkMessageBox.showerror(message='Netlist not successfully generated')
+      #errorfile=open('error.log','r')
+      #for line in errorfile:
+      #  tkMessageBox.showerror(message=line)
+      #errorfile.close()
 
 class ScrollbarFrame(Frame):
   def __init__(self, root):
