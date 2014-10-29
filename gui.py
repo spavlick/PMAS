@@ -474,15 +474,13 @@ class GUI(Frame):
     for line in errorfile:
       tkMessageBox.showerror(message=line)'''
 
-class ScrollbarFrame(GUI):
-  def __init__(self,root):
-    self.root=root
-    GUI.__init__(self,self.root)
-
-    #creating canvas and additional frame for scrollbar
-    self.canvas = Canvas(self.root, borderwidth=0)
-    self.frame = Frame(self.canvas)
-    self.vsb = Scrollbar(self.root, orient="vertical", command=self.canvas.yview)
+class ScrollbarFrame(Frame):
+  def __init__(self, root):
+    
+    Frame.__init__(self, root)
+    self.canvas = Canvas(root, borderwidth=0, background="#ffffff")
+    self.frame = GUI(root)
+    self.vsb = Scrollbar(root, orient="vertical", command=self.canvas.yview)
     self.canvas.configure(yscrollcommand=self.vsb.set)
 
     self.vsb.pack(side="right", fill="y")
@@ -502,3 +500,5 @@ if __name__=='__main__':
   mainframe.pack(side="top", fill="both", expand=True)
   #for child in mainframe.winfo_children(): child.grid_configure(padx=3, pady=3)
   root.mainloop()
+
+#add check for format of each entry
