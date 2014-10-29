@@ -8,21 +8,52 @@ import numpy
 import time
 import getpass
 from ast import literal_eval
-import sys,os
+import sys
 
 MU0=4*math.pi*1e-7
-
-
-fsock=open('error.log','w')
-sys.stderr=fsock
-
 
 class GUI(Frame):
   def __init__(self,root):
     self.root=root
     Frame.__init__(self,self.root)
 
-    self.root.title('Planar Magnetics Analyzing System (PMAS)')
+    self.root.title('Planar Magnetics Analyzing Tool (PLAMAT)')
+
+    #write errors to log file
+    self.stderrredirect()
+
+    '''self.vscrollbar = Scrollbar(self, orient=VERTICAL)
+    self.vscrollbar.pack(fill=Y, side=RIGHT, expand=FALSE)
+    self.canvas = Canvas(self, bd=0, highlightthickness=0,
+                    yscrollcommand=self.vscrollbar.set)
+    self.canvas.pack(side=LEFT, fill=BOTH, expand=TRUE)
+    self.vscrollbar.config(command=self.canvas.yview)
+
+    # reset the view
+    self.canvas.xview_moveto(0)
+    self.canvas.yview_moveto(0)
+
+    # create a frame inside the canvas which will be scrolled with it
+    self.interior = interior = Frame(self.canvas)
+    interior_id = self.canvas.create_window(0, 0, window=interior,
+                                       anchor=NW)
+
+    # track changes to the canvas and frame width and sync them,
+    # also updating the scrollbar
+    def _configure_interior(event):
+        # update the scrollbars to match the size of the inner frame
+        size = (interior.winfo_reqwidth(), interior.winfo_reqheight())
+        self.canvas.config(scrollregion="0 0 %s %s" % size)
+        if interior.winfo_reqwidth() != self.canvas.winfo_width():
+            # update the canvas's width to fit the inner frame
+            self.canvas.config(width=interior.winfo_reqwidth())
+    interior.bind('<Configure>', _configure_interior)
+
+    def _configure_canvas(event):
+        if interior.winfo_reqwidth() != self.canvas.winfo_width():
+            # update the inner frame's width to fill the canvas
+            self.canvas.itemconfigure(interior_id, width=self.canvas.winfo_width())
+    self.canvas.bind('<Configure>', _configure_canvas)'''
 
 
     self.file_opt=options={}
@@ -116,9 +147,10 @@ class GUI(Frame):
     self.createbuttons()
     self.printlabels()
 
-  def OnFrameConfigure(self, event):
-    '''Reset the scroll region to encompass the inner frame'''
-    self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+  def stderrredirect(self):
+    fsock=open('error.log','w')
+    sys.stderr=fsock
+
 
     # ask for open geometry file name
   def askopengeofilename(self):
@@ -156,23 +188,21 @@ class GUI(Frame):
     nlayer=int(self.nlayer.get())
 
     if nwinding!= max(literal_eval(self.lindex.get())):
-        tkMessageBox.showerror(message='Error: nwinding mismatch with lindex. Please retry.')
+        tkMessageBox.showerror(message='nwinding mismatch with lindex, please retry')
     elif nwinding!= len(literal_eval(self.wstyle.get())):
-        tkMessageBox.showerror(message='Error: nwinding mismatch with wstyle. Please retry.')
+        tkMessageBox.showerror(message='nwinding mismatch with wstyle, please retry')
     elif nlayer!=len(literal_eval(self.h.get())):
-        tkMessageBox.showerror(message='Error: nlayer mismatch with h. Please retry.')
+        tkMessageBox.showerror(message='nlayer mismatch with h, please retry')
     elif nlayer!=(len(literal_eval(self.s.get()))-1):
-        tkMessageBox.showerror(message='Error: nlayer mismatch with s. Please retry.')
+        tkMessageBox.showerror(message='nlayer mismatch with s, please retry')
     elif nlayer!=len(literal_eval(self.w.get())):
-        tkMessageBox.showerror(message='Error: nlayer mismatch with w. Please retry.')
+        tkMessageBox.show(message='nlayer mismatch with w, please retry')
     elif nlayer!=len(literal_eval(self.lindex.get())):
-        tkMessageBox.showerror(message='Error: nlayer mismatch with lindex. Please retry.')
+        tkMessageBox.showerror(message='nlayer mismatch with lindex, please retry')
     elif nlayer!=len(literal_eval(self.m.get())):
-        tkMessageBox.showerror(message='Error: nlayer mismatch with m. Please retry.')
-    elif max(literal_eval(self.wstyle.get()))>1:
-        tkMessageBox.showerror(message='Error: winding style can only be 0=series or 1=parallel. Please retry.')
+        tkMessageBox.showerror(message='nlayer mismatch with m, please retry')
     else:
-        tkMessageBox.showinfo(message='Geometry format is correct! Please continue.')
+        tkMessageBox.showinfo(message='Geometry format is correct, please continue')
     
 
   def printlabels(self):
@@ -376,7 +406,7 @@ class GUI(Frame):
         for index_layer in range(NumofLayer):
           if WindingIndex[index_layer]==index_winding+1:
             f.write('\n* --> Includes Layer {}'.format(index_layer+1))
-            f.write('\n* ---> thickness {:4.2f}mm, width {:4.2f}mm, {} turns, spacing above {:4.2f}mm, spacing below {:4.2f}mm'.format(h[index_layer]*1e3, w[index_layer]*1e3, m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
+            f.write('\n* ---> thickness {}, width {}, turns {}, spacing above {:4.2f}m, spacing below {:4.2f}m'.format(h[index_layer], w[index_layer], m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
             totalturn=totalturn+m[index_layer]
         f.write('\n* -> Winding {0} has {1} total turns; \n* --> External Port Name: PortP{0}, PortN{0}'.format(index_winding+1, totalturn))
 
@@ -389,7 +419,7 @@ class GUI(Frame):
         for index_layer in range(NumofLayer):
           if WindingIndex[index_layer]==index_winding+1:
             f.write('\n* --> Includes Layer {}'.format(index_layer+1))
-            f.write('\n* ---> thickness {:4.2f}mm, width {:4.2f}mm, {} turns, spacing above {:4.2f}mm, spacing below {:4.2f}mm'.format(h[index_layer]*1e3, w[index_layer]*1e3, m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
+            f.write('\n* ---> thickness {}, width {}, turns {}, spacing above {:4.2f}m, spacing below {:4.2f}m'.format(h[index_layer], w[index_layer], m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
             numSeriesLayers+=1
             totalturn=totalturn+m[index_layer]
         f.write('\n* -> Winding {0} has {1} total turns; \n* --> External Port Name: PortP{0}, PortN{0}'.format(index_winding+1, totalturn))
@@ -409,23 +439,23 @@ class GUI(Frame):
       ls=self.Ls[index]
       mx=m[index]
 
-      f.write('\n\n*NetList for Layer   {}'.format(index+1))
-      f.write('\nLe{0}  N{0}    P{0}           {1}'.format(index,mx**2))
-      f.write('\nLi{0}  G     Md{0}            {1}'.format(index,1))
-      f.write('\nLg{0}  Mg{0}   Md{0}   {1:14.2f}p'.format(index,lb*1e12))
-      f.write('\nRg{0}  Mc{0}   Mg{0}   {1:14.2f}m'.format(index,rb*1e3))
-      f.write('\nRt{0}  Mc{0}   Mt{0}   {1:14.2f}u'.format(index,ra*1e6))
-      f.write('\nRb{0}  Mb{0}   Mc{0}   {1:14.2f}u'.format(index,ra*1e6))
-      f.write('\nLt{0}  T{0}    Mt{0}   {1:14.2f}p'.format(index,la*1e12))
-      f.write('\nLb{0}  Mb{0}   B{0}    {1:14.2f}p'.format(index,la*1e12))
-      f.write('\nLs{0}  B{0}    T{1}    {2:14.2f}n'.format(index,index+1,ls*1e9))
-      f.write('\nK{0}   Le{0}   Li{0}            1'.format(index))
+      f.write('\n\n*NetList for Layer {}'.format(index+1))
+      f.write('\nLe{0} N{0} P{0} {1}'.format(index,mx**2))
+      f.write('\nLi{0} G Md{0} {1}'.format(index,1))
+      f.write('\nLg{0} Mg{0} Md{0} {1:14.2f}p'.format(index,lb*1e12))
+      f.write('\nRg{0} Mc{0} Mg{0} {1:14.2f}m'.format(index,rb*1e3))
+      f.write('\nRt{0} Mc{0} Mt{0} {1:14.2f}u'.format(index,ra*1e6))
+      f.write('\nRb{0} Mb{0} Mc{0} {1:14.2f}u'.format(index,ra*1e6))
+      f.write('\nLt{0} T{0} Mt{0} {1:14.2f}p'.format(index,la*1e12))
+      f.write('\nLb{0} Mb{0} B{0} {1:14.2f}p'.format(index,la*1e12))
+      f.write('\nLs{0} B{0} T{1} {2:14.2f}n'.format(index,index+1,ls*1e9))
+      f.write('\nK{0} Le{0} Li{0} 1'.format(index))
 
     #Print the ferrite cores and top spacing
     f.write('\n\n*NetList for Top and Bottom Ferrites, as well as the First Spacing on Top Side')
-    f.write('\nLft  T0    G   {:14.2f}u'.format(self.Lft*1e6))
-    f.write('\nLfb  T{}   G   {:14.2f}u'.format(NumofLayer+1,self.Lfb*1e6))
-    f.write('\nLs0  T1   T0  {:14.2f}n'.format(self.Lts*1e9))
+    f.write('\nLft T0 G {:14.2f}u'.format(self.Lft*1e6))
+    f.write('\nLfb T{} G {:14.2f}u'.format(NumofLayer+1,self.Lfb*1e6))
+    f.write('\nLs0 T1 T0 {:14.2f}n'.format(self.Lts*1e9))
 
     #Print the external connections
     f.write('\n\n*NetList for Winding Interconnects')
@@ -439,8 +469,8 @@ class GUI(Frame):
         for index_layer in range(NumofLayer):
           if WindingIndex[index_layer]==index_winding+1:
             f.write('\n* -->Include layer {}'.format(index_layer+1))
-            f.write('\nRexP{0}  PortP{1}    P{0}    1n'.format(index_layer+1,index_winding+1))
-            f.write('\nRexN{0}  PortN{1}    N{0}    1n'.format(index_layer+1,index_winding+1))
+            f.write('\nRexP{0} PortP{1} P{0}    1n'.format(index_layer+1,index_winding+1))
+            f.write('\nRexN{0} PortN{1} N{0}    1n'.format(index_layer+1,index_winding+1))
 
 
       #Series Connected
@@ -455,61 +485,32 @@ class GUI(Frame):
             Serieslayers[numSeriesLayers]=index_layer+1
             numSeriesLayers+=1
         #defining two wires from external port to the front and end layers
-        f.write('\nRexP{0}  PortP{1}    P{0}    1n'.format(Serieslayers[1],index_winding+1))
-        f.write('\nRexN{0}  PortN{1}    N{0}    1n'.format(Serieslayers[numSeriesLayers-1],index_winding+1))
+        f.write('\nRexP{0} PortP{1} P{0}    1n'.format(Serieslayers[1],index_winding+1))
+        f.write('\nRexN{0} PortN{1} N{0}    1n'.format(Serieslayers[numSeriesLayers-1],index_winding+1))
         #defining the interconnects among series connected layers
         for index_SeriesLayers in range(numSeriesLayers-2):
-          f.write('\nRexM{0}   N{0}      P{1}      1n'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2]))
+          f.write('\nRexM{0} N{0} P{1}      1n'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2]))
 
 
 
-    #netlist finalized
-    f.write('\n******************************************************************')
-    f.write('\n*****                   Netlist Ends                      ********')
-    f.write('\n******************************************************************')
-    f.close()
-<<<<<<< HEAD
-    tkMessageBox.showinfo(message='Successfully Generated Netlist!')
-=======
-    tkMessageBox.showinfo(message='Successfully Generated Netlist')
-  
-  def generate_netlist_errors(self):
-    self.generate_netlist()
- 
-    tkMessageBox.showerror(message='Netlist not successfully generated')
-      #errorfile=open('error.log','r')
-      #for line in errorfile:
-      #  tkMessageBox.showerror(message=line)
-      #errorfile.close()
-
-class ScrollbarFrame(Frame):
-  def __init__(self, root):
+      #netlist finalized
+      f.write('\n******************************************************************')
+      f.write('\n*****                   Netlist Ends                      ********')
+      f.write('\n******************************************************************')
+      f.close()
+      tkMessageBox.showinfo(message='Successfully Generated Netlist')
     
-    Frame.__init__(self, root)
-    self.canvas = Canvas(root, borderwidth=0, background="#ffffff")
-    self.frame = GUI(root)
-    self.hsb = Scrollbar(root, orient="horizontal", command=self.canvas.xview)
-    self.vsb = Scrollbar(root, orient="vertical", command=self.canvas.yview)
-    self.canvas.configure(xscrollcommand=self.hsb.set,yscrollcommand=self.vsb.set)
-
-    self.vsb.pack(side="right", fill="y")
-    self.hsb.pack(side="bottom",fill="x")
-    self.canvas.pack(side="top", fill="both", expand=True)
-    self.canvas.create_window((6,6), window=self.frame, anchor="nw", 
-                              tags="self.frame")
->>>>>>> upstream/master
-
-    self.frame.bind("<Configure>", self.OnFrameConfigure)
-
-  def OnFrameConfigure(self, event):
-    '''Reset the scroll region to encompass the inner frame'''
-    self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+    def generate_netlist_errors(self):
+      try:
+        self.generate_netlist()
+      finally:
+        errorfile=open('error.log','r')
+        for line in errorfile:
+          tkMessageBox.showerror(message=line)
 
 if __name__=='__main__':
   root=Tk()
-  mainframe=ScrollbarFrame(root)
-  mainframe.pack(side="top", fill="both", expand=True)
-  #for child in mainframe.winfo_children(): child.grid_configure(padx=3, pady=3)
+  mainframe=GUI(root)
+  mainframe.grid()
+  for child in mainframe.winfo_children(): child.grid_configure(padx=3, pady=3)
   root.mainloop()
-
-#add check for format of each entry
