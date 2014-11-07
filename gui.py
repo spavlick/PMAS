@@ -152,9 +152,78 @@ class GUI(Frame):
       self.entries[key].delete(0,END)
     
   def checkgeom(self):
+    self.syntaxCheck()
+    self.valueCheck()
+
+  def syntaxCheck(self):
+    try:
+      literal_eval(self.h.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for h')
+    try:
+      literal_eval(self.w.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for w')
+    try:
+      literal_eval(self.s.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for s')
+    try:
+      literal_eval(self.m.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for m')
+    try:
+      literal_eval(self.wstyle.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for wstyle')
+    try:
+      literal_eval(self.lindex.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for lindex')
+    try:
+      float(self.sigma.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for sigma. Please enter float value')
+    try:
+      float(self.mur.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for mur. Please enter float value')
+    try:
+      int(self.nlayer.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for nlayer. Please enter integer value')
+    try:
+      int(self.nwinding.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for nwinding. Please enter integer value')
+    try:
+      float(self.gt.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for gt. Please enter float value')
+    try:
+      float(self.gb.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for gb. Please enter float value')
+    try:
+      float(self.Ae.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for Ae. Please enter float value')
+    try:
+      float(self.le.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for le. Please enter float value')
+    try:
+      float(self.nc.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for nc. Please enter float value')
+    try:
+      float(self.c.get())
+    except SyntaxError:
+      tkMessageBox.showerror(message='incorrect entry format for c. Please enter float value')
+
+  def valueCheck(self):
     nwinding=int(self.nwinding.get()) 
     nlayer=int(self.nlayer.get())
-
     if nwinding!= max(literal_eval(self.lindex.get())):
         tkMessageBox.showerror(message='nwinding mismatch with lindex, please retry')
     elif nwinding!= len(literal_eval(self.wstyle.get())):
@@ -276,7 +345,9 @@ class GUI(Frame):
     Button(buttonframe,text='Reset Geometry',command=self.resetgeom).pack(side=LEFT,padx=5)
     buttonframe.grid(row=0, columnspan=5)
     Button(self,text='Check Geometry Status',command=self.checkgeom).grid(row=18,columnspan=5)
-    Button(self,text='Generate Netlist',command=self.generate_netlist_errors).grid(row=20,columnspan=5)
+    netlist_button=Button(self,text='Generate Netlist',command=self.generate_netlist_errors)
+    netlist_button.grid(row=20,columnspan=5)
+    #netlist_button.configure(command=self.generate_netlist_errors)
 
   def getImpe(self):
     sigma=float(self.sigma.get())
@@ -469,19 +540,22 @@ class GUI(Frame):
     tkMessageBox.showinfo(message='Successfully Generated Netlist')
   
   def generate_netlist_errors(self):
-    self.generate_netlist()
- 
-    tkMessageBox.showerror(message='Netlist not successfully generated')
-      #errorfile=open('error.log','r')
-      #for line in errorfile:
-      #  tkMessageBox.showerror(message=line)
-      #errorfile.close()
+    try:
+      self.generate_netlist()
+    except Exception:
+      tkMessageBox.showerror(message='Netlist not successfully generated')
+    '''if os.path.getsize('error.log') > 0:
+      tkMessageBox.showerror(message='Netlist not successfully generated')
+      errorfile=open('error.log','r')
+      for line in errorfile:
+        tkMessageBox.showerror(message=line)
+      errorfile.close()'''
 
 class ScrollbarFrame(Frame):
   def __init__(self, root):
     
     Frame.__init__(self, root)
-    self.canvas = Canvas(root, borderwidth=0, background="#ffffff")
+    self.canvas = Canvas(root, borderwidth=0)
     self.frame = GUI(root)
     self.hsb = Scrollbar(root, orient="horizontal", command=self.canvas.xview)
     self.vsb = Scrollbar(root, orient="vertical", command=self.canvas.yview)
