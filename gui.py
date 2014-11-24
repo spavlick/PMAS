@@ -541,7 +541,7 @@ class GUI(Frame):
     try:
       self.generate_netlist()
     except Exception as e:
-      tkMessageBox.showerror(message=e.message)
+      tkMessageBox.showerror(message=e.message + '\nRecheck geometry status')
       tkMessageBox.showerror(message='Netlist not successfully generated')
 
 class ScrollbarFrame(Frame):
