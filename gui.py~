@@ -13,8 +13,6 @@ import sys,os
 MU0=4*math.pi*1e-7
 
 
-fsock=open('error.log','w')
-sys.stderr=fsock
 
 
 class GUI(Frame):
@@ -542,7 +540,9 @@ class GUI(Frame):
   def generate_netlist_errors(self):
     try:
       self.generate_netlist()
-    except Exception:
+    except Exception as e:
+      print e.message
+      tkMessageBox.showerror(message=e.message)
       tkMessageBox.showerror(message='Netlist not successfully generated')
     '''if os.path.getsize('error.log') > 0:
       tkMessageBox.showerror(message='Netlist not successfully generated')
@@ -554,7 +554,7 @@ class GUI(Frame):
 class ScrollbarFrame(Frame):
   def __init__(self, root):
     
-    Frame.__init__(self, root,height=200,width=700)
+    Frame.__init__(self, root,height=200,width=600)
     self.canvas = Canvas(root, borderwidth=0)
     self.frame = GUI(root)
     self.hsb = Scrollbar(root, orient="horizontal", command=self.canvas.xview)
