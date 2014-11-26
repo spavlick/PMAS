@@ -13,8 +13,6 @@ import sys,os
 MU0=4*math.pi*1e-7
 
 
-fsock=open('error.log','w')
-sys.stderr=fsock
 
 
 class GUI(Frame):
@@ -158,67 +156,67 @@ class GUI(Frame):
   def syntaxCheck(self):
     try:
       literal_eval(self.h.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for h')
     try:
       literal_eval(self.w.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for w')
     try:
       literal_eval(self.s.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for s')
     try:
       literal_eval(self.m.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for m')
     try:
       literal_eval(self.wstyle.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for wstyle')
     try:
       literal_eval(self.lindex.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for lindex')
     try:
       float(self.sigma.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for sigma. Please enter float value')
     try:
       float(self.mur.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for mur. Please enter float value')
     try:
       int(self.nlayer.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for nlayer. Please enter integer value')
     try:
       int(self.nwinding.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for nwinding. Please enter integer value')
     try:
       float(self.gt.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for gt. Please enter float value')
     try:
       float(self.gb.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for gb. Please enter float value')
     try:
       float(self.Ae.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for Ae. Please enter float value')
     try:
       float(self.le.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for le. Please enter float value')
     try:
       float(self.nc.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for nc. Please enter float value')
     try:
       float(self.c.get())
-    except SyntaxError:
+    except Exception:
       tkMessageBox.showerror(message='incorrect entry format for c. Please enter float value')
 
   def valueCheck(self):
@@ -542,19 +540,14 @@ class GUI(Frame):
   def generate_netlist_errors(self):
     try:
       self.generate_netlist()
-    except Exception:
+    except Exception as e:
+      tkMessageBox.showerror(message=e.message + '\nRecheck geometry status')
       tkMessageBox.showerror(message='Netlist not successfully generated')
-    '''if os.path.getsize('error.log') > 0:
-      tkMessageBox.showerror(message='Netlist not successfully generated')
-      errorfile=open('error.log','r')
-      for line in errorfile:
-        tkMessageBox.showerror(message=line)
-      errorfile.close()'''
 
 class ScrollbarFrame(Frame):
   def __init__(self, root):
     
-    Frame.__init__(self, root)
+    Frame.__init__(self, root,height=200,width=600)
     self.canvas = Canvas(root, borderwidth=0)
     self.frame = GUI(root)
     self.hsb = Scrollbar(root, orient="horizontal", command=self.canvas.xview)
@@ -564,7 +557,7 @@ class ScrollbarFrame(Frame):
     self.vsb.pack(side="right", fill="y")
     self.hsb.pack(side="bottom",fill="x")
     self.canvas.pack(side="top", fill="both", expand=True)
-    self.canvas.create_window((6,6), window=self.frame, anchor="nw", 
+    self.canvas.create_window((4,4),window=self.frame, anchor="nw", 
                               tags="self.frame")
 
     self.frame.bind("<Configure>", self.OnFrameConfigure)
@@ -579,5 +572,3 @@ if __name__=='__main__':
   mainframe.pack(side="top", fill="both", expand=True)
   #for child in mainframe.winfo_children(): child.grid_configure(padx=3, pady=3)
   root.mainloop()
-
-#add check for format of each entry
