@@ -11,13 +11,18 @@ import ttk
 import getpass
 from ast import literal_eval
 import sys,os
+import ScrolledText as tkst
+import tkFont
+
+
+
 
 class GUI(Frame):
   def __init__(self,root):
     self.root=root
     Frame.__init__(self,self.root, background="white")
 
-    self.root.title('Planar Magnetics to SPICE Netlist Converter - M2Spice - MIT Power Electronics Research Group')
+    self.root.title('M2Spice - Planar Magnetics to SPICE Netlist Conversion Tool')
 
     self.file_opt=options={}
     options['defaultextension']='.txt'
@@ -47,9 +52,8 @@ class GUI(Frame):
     self.lindex=StringVar()     #layer indices
     self.gt=StringVar()         #core gap length on the top side
     self.gb=StringVar()         #core gap length on the bottom side
-    self.Ae=StringVar()         #effective gap area
+    self.Ac=StringVar()         #effective gap area
     self.le=StringVar()         #effective length
-    #self.nc=StringVar()         #number of cores
     self.c=StringVar()          #thickness of top and bottom ferrite
 
     #create variables for entry objects
@@ -67,7 +71,7 @@ class GUI(Frame):
     self.lindexentry=None
     self.gtentry=None
     self.gbentry=None
-    self.Aeentry=None
+    self.Acentry=None
     self.leentry=None
     self.centry=None
     
@@ -95,7 +99,7 @@ class GUI(Frame):
     self.entries['lindex']=self.lindexentry
     self.entries['gt']=self.gtentry
     self.entries['gb']=self.gbentry
-    self.entries['Ae']=self.Aeentry
+    self.entries['Ac']=self.Acentry
     self.entries['le']=self.leentry
     self.entries['c']=self.centry
 
@@ -115,28 +119,13 @@ class GUI(Frame):
     self.createbuttons()
     self.printlabels()
     self.centerWindow()
-    
-    def resource_path(relative_path):
-        """ Get absolute path to resource, works for dev and for PyInstaller """
-        try:
-            # PyInstaller creates a temp folder and stores path in _MEIPASS
-            base_path = sys._MEIPASS
-        except Exception:
-            base_path = os.path.abspath(".")
-                                
-        return os.path.join(base_path, relative_path)
-  
-    path1 = resource_path("multiwinding.gif")
-    self.image1 = PhotoImage(file = path1)
-    self.display = Label(self, image = self.image1, bg='white')
-    self.display.grid(row=1,column=5, columnspan=1,rowspan=10,sticky=W+E+N+S)
 
     # always center the window in the middle of the screen
   def centerWindow(self):
-    w = 1000
-    h = 400
     sw = self.root.winfo_screenwidth()
     sh = self.root.winfo_screenheight()
+    w = int(sw*0.8)
+    h = int(sh*0.75)
     x = (sw - w)/2
     y = (sh - h)/2
     self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
@@ -144,6 +133,32 @@ class GUI(Frame):
   def OnFrameConfigure(self, event):
     '''Reset the scroll region to encompass the inner frame'''
     self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+  
+  def create_window(self):
+    img = tk.Toplevel(self)
+    img.title("M2Spice - Design Reference")
+    
+    def resource_path(relative_path):
+        """ Get absolute path to resource, works for dev and for PyInstaller """
+        try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(".")
+        return os.path.join(base_path, relative_path)
+  
+    path1 = resource_path("multiwinding.gif")
+    img.image1 = PhotoImage(file = path1)
+    img.display = Label(img, image = img.image1, bg='white')
+    img.display.grid(row=0,column=0, columnspan=6,rowspan=12,sticky=W+E+N+S)
+    sw = self.root.winfo_screenwidth()
+    sh = self.root.winfo_screenheight()
+    w = int(sw*0.38)
+    h = int(sh*0.6)
+    x = sw-w
+    y = 0
+    img.geometry('%dx%d+%d+%d' % (w, h, x, y))
+  
 
     # ask for open geometry file name
   def askopengeofilename(self):
@@ -156,37 +171,182 @@ class GUI(Frame):
     # ask for save netlist file name
   def asksaveasnetlistfilename(self):
     self.netlistfilename=tkFileDialog.asksaveasfilename(**self.file_opt)
+  
+  def askopennetlistfilename(self):
+    self.netlistfilename=tkFileDialog.askopenfilename(**self.file_opt)
 
   def savegeom(self):
     try:
       self.asksaveasgeofilename()
-      f=open(self.geofilename,'w')
-      for key in self.entries.keys():
-        f.write(key + ' = ' + self.entries[key].get() + '\n')
-      f.close()
-      tkMessageBox.showinfo(message='Geometry is successfully saved at:\n\n' + self.geofilename)
+      if self.geofilename:
+        f=open(self.geofilename,'w')
+        for key in self.entries.keys():
+          f.write(key + ' = ' + self.entries[key].get() + '\n')
+        f.close()
+        tkMessageBox.showinfo('M2Spice - Save Geometry - Saved', message='Successfully saved geometry to:\n\n' + self.geofilename)
     except Exception as e:
-      tkMessageBox.showerror(message='Geometry is not saved.\n System reported the following errors: \n\n' +e.message + '\n\nPlease check the geometry status.')
-
-  def loadgeom(self):
-    try:
-      self.resetgeom()
-      self.askopengeofilename()
-      f=open(self.geofilename,'r')
-      for line in f:
-        self.entries[line.split()[0]].insert(0,line.split()[2])
-      f.close()
-      tkMessageBox.showinfo(message='Geometry is successfully loaded.\n Please check the geometry format ("Check Geometry").')
-    except Exception as e:
-      tkMessageBox.showerror(message='Geometry is not loaded.\n System reported the following errors: \n\n' +e.message + '\n\nPlease check the input file format.')
-
+      tkMessageBox.showerror('M2Spice - Save Geometry - Failed', message='Failed to save geometry.\n\nSystem reported the following errors: \n\n' +e.message + '\n\nPossible reasons: 1. invalid saving address; 2. invalid geometry format.' + '\n\nPlease check the saving address and geometry format.')
 
   def resetgeom(self):
+    cleartag = tkMessageBox.askyesno('M2Spice - Clear Geometry', message='Do you really want to clear the geometry information? All unsaved data will be lost.')
+    if cleartag==True:
+        for key in self.entries.keys():
+            self.entries[key].delete(0,END)
+
+  def loadgeom(self):
+    loadvar=""
+    try:
+      self.askopengeofilename()
+      if self.geofilename:
+        for key in self.entries.keys(): #clear up
+            self.entries[key].delete(0,END)
+        f=open(self.geofilename,'r')
+        for line in f:
+            line_cell=line.split()
+            if (len(line_cell)==3):
+                self.entries[line.split()[0]].insert(0,line.split()[2])
+                loadvar = loadvar + line.split()[0] + ', '
+        f.close()
+        if (len(loadvar.split())==17):
+            tkMessageBox.showinfo('M2Spice - Forward Geometry - Forwarded', message='Successfully forwarded all parameters. Please double check the geometry format in the GUI, and clicking "Check Geometry" in the main GUI).')
+        else:
+            tkMessageBox.showinfo('M2Spice - Forward Geometry - Partially Loaded', message='Some parameters are missing. Please double check the geometry format.')
+    except Exception as e:
+      tkMessageBox.showerror('M2Spice - Load Geometry - Failed', message='Failed to load geometry.\n\nSystem reported the following errors: \n\n' +e.message + '\n\nPossible reasons: 1. invalid loading address; 2.invalid geometry format.' + '\n\nPlease check the loading address and geometry format.')
+
+
+  def editgeom(self):
+    geoinfo=""
     for key in self.entries.keys():
-      self.entries[key].delete(0,END)
+        geoinfo = geoinfo + key + ' = ' + self.entries[key].get() + '\n'
+    editor = tk.Toplevel(self, bg='white', width=550,height=500)
+    editor.title("M2Spice - Geometry Editor")
+    
+    #overall frame position
+    editorarea = tk.Frame(editor ,height=100,width=50,bg='white',borderwidth=1)
+    #editorarea.place(x=20,y=20)
+    editorscrollbar=tk.Scrollbar(editorarea)
+    
+    #size of the scrollbar
+    editArea=tk.Text(editorarea, width=70, height=30, wrap="word", yscrollcommand=editorscrollbar.set)
+    editorscrollbar.config(command=editArea.yview)
+    editorscrollbar.pack(side="right",fill="y")
+    editArea.pack(side="left",fill="both",expand=True)
+    
+    #position of the editorial area
+    editorarea.place(x=20,y=40)
+    
+    sw = editor.winfo_screenwidth()
+    sh = editor.winfo_screenheight()
+    w = int(sw*0.4)
+    h = int(sh*0.6)
+    x = 0
+    y = 0
+    editor.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
+    #Write in the current geo information
+    editArea.insert(tk.INSERT,geoinfo)
+
+    def askopengeofilename():
+        self.geofilename=tkFileDialog.askopenfilename(**self.file_opt)
+        
+    # ask for save geometry file name
+    def asksaveasgeofilename():
+        self.geofilename=tkFileDialog.asksaveasfilename(**self.file_opt)
+    
+    def reseteditgeom():
+        cleartag = tkMessageBox.askyesno('M2Spice - Clear Geometry', message='Do you really want to clear the geometry information? All unsaved data will be lost.')
+        if cleartag==True:
+            editArea.delete(1.0, END)
+
+    def loadeditgeom():
+        try:
+            askopengeofilename()
+            if self.geofilename:
+                editArea.delete(1.0, END) #clear up
+                f=open(self.geofilename,'r')
+                netlist=f.read()
+                editArea.insert(tk.INSERT,netlist)
+                f.close()
+                editor.lift()
+        #tkMessageBox.showinfo('Load Report - Loaded', message='Successfully loaded geometry.\n\nPlease check the geometry format by clicking "Check Geometry").')
+        except Exception as e:
+                tkMessageBox.showerror('M2Spice - Load Geometry - Failed', message='Failed to load geometry.\n\nSystem reported the following errors: \n\n' +e.message + '\n\nPossible reasons: 1. invalid loading address; 2.invalid geometry format.' + '\n\nPlease check the loading address and geometry format.')
+
+    def saveeditgeom():
+        geoinfo=""
+        try:
+            asksaveasgeofilename()
+            if self.geofilename:
+                geoinfo = editArea.get(1.0,'end-1c')
+                geoinfo = os.linesep.join([s for s in geoinfo.splitlines() if s])
+                f=open(self.geofilename,'w')
+                f.write(geoinfo)
+                f.close()
+                tkMessageBox.showinfo('M2Spice - Save Geometry - Saved', message='Successfully saved geometry to:\n\n' + self.geofilename)
+                editor.lift()
+        except Exception as e:
+            tkMessageBox.showerror('M2Spice - Save Geometry - Failed', message='Failed to save geometry.\n\nSystem reported the following errors: \n\n' +e.message + '\n\nPossible reasons: 1. invalid saving address; 2. invalid geometry format.' + '\n\nPlease check the saving address and geometry format.')
+
+    def forwardeditgeom():
+        geoinfo=""
+        fwdvar="" #forwarded variable
+        try:
+            for key in self.entries.keys():
+                self.entries[key].delete(0,END) #clear up
+            geoinfo = editArea.get(1.0,'end-1c')
+            geoinfo = os.linesep.join([s for s in geoinfo.splitlines() if s])
+            for line in geoinfo.splitlines():
+                line_cell=line.split()
+                if (len(line_cell)==3):
+                    self.entries[line.split()[0]].insert(0,line.split()[2])
+                    fwdvar = fwdvar + line.split()[0] + ', '
+            if (len(fwdvar.split())==17):
+                tkMessageBox.showinfo('M2Spice - Forward Geometry - Forwarded', message='Successfully forwarded all parameters. Please double check the geometry format in the GUI, and clicking "Check Geometry" in the main GUI).')
+                editor.lower()
+            else:
+                tkMessageBox.showinfo('M2Spice - Forward Geometry - Partially Forwarded', message='Some parameters are missing. Please double check the geometry format.')
+        except Exception as e:
+            tkMessageBox.showerror('M2Spice - Forward Geometry - Failed', message='Failed to forward geometry.\n\nSystem reported the following errors: \n\n' +e.message + '\n\nPossible reasons: 1. invalid loading address; 2.invalid geometry format.' + '\n\nPlease check the loading address and geometry format.')
+
+    custom = tkFont.Font(size=12, weight='bold')  # you don't have to use Helvetica or bold, this is just an example
+    
+    buttonframe=Frame(editor, bg='white', height=3)
+    Button(buttonframe, text='Load Geometry', command=loadeditgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Save Geometry', command=saveeditgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Clear Geometry', command=reseteditgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Forward Geometry', command=forwardeditgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
+    buttonframe.grid(row=0, columnspan=5)
+               
+  def viewnetlist(self):
+    try:
+      self.askopennetlistfilename()
+      if self.netlistfilename:
+        f=open(self.netlistfilename,'r')
+        netlist=f.read()
+        viewer = tk.Toplevel(self, bg='white', width=550,height=500)
+        viewer.title("M2Spice - Netlist Viewer")
+        viewarea = tk.Frame(viewer,height=100,width=50,bg='white',borderwidth=1)
+        viewscrollbar=tk.Scrollbar(viewarea)
+        editArea=tk.Text(viewarea,width=70,height=30,wrap="word",yscrollcommand=viewscrollbar.set,borderwidth=0,highlightthickness=0)
+        viewscrollbar.config(command=editArea.yview)
+        viewscrollbar.pack(side="right",fill="y")
+        editArea.pack(side="left",fill="both",expand=True)
+        editArea.insert(tk.INSERT,netlist)
+        viewarea.place(x=20,y=20)
+        sw = viewer.winfo_screenwidth()
+        sh = viewer.winfo_screenheight()
+        w = int(sw*0.4)
+        h = int(sh*0.6)
+        x = sw-w
+        y = sw-h
+        viewer.geometry('%dx%d+%d+%d' % (w, h, x, y))
+    except Exception as e:
+      tkMessageBox.showerror('M2Spice - Netlist Viewer - Failed', message='Failed to open netlist.\n\nSystem reported the following errors: \n\n' +e.message + '\n\nPossible reasons: 1. invalid netlist address; 2.invalid netlist file.' + '\n\nPlease check the netlist address and netlist file.')
     
   def checkgeom(self):
     self.errorMsg=''
+    self.errorNum=0
     self.errorCheck()
 
 
@@ -195,106 +355,122 @@ class GUI(Frame):
     try:
       len(literal_eval(self.h.get()))
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid winding thickness (h), please enter a list of float values ("[" and "]" are required).'
-
+      self.errorMsg=self.errorMsg+'\n -- invalid winding thickness (h), please enter a list of float values (please include "[" and "]").'
+      self.errorNum=self.errorNum+1
     try:
       len(literal_eval(self.w.get()))
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid winding width (w), please enter a list of float values ("[" and "]" are required).'
-      
+      self.errorMsg=self.errorMsg+'\n -- invalid winding width (w), please enter a list of float values (please include "[" and "]").'
+      self.errorNum=self.errorNum+1
     try:
       len(literal_eval(self.s.get()))
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid winding spacing (s), please enter a list of float values ("[" and "]" are required).'
-      
+      self.errorMsg=self.errorMsg+'\n -- invalid winding spacing (s), please enter a list of float values (please include "[" and "]").'
+      self.errorNum=self.errorNum+1
     try:
       len(literal_eval(self.mus.get()))
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid spacing permeability (mus), please enter a list of float values ("[" and "]" are required).'
-    
+      self.errorMsg=self.errorMsg+'\n -- invalid spacing permeability (mus), please enter a list of float values (please include "[" and "]").'
+      self.errorNum=self.errorNum+1
     try:
       len(literal_eval(self.m.get()))
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid number of turns on each layer (m), please enter a list of integer values ("[" and "]" are required).'
-    
+      self.errorMsg=self.errorMsg+'\n -- invalid number of turns on each layer (m), please enter a list of integer values (please include "[" and "]").'
+      self.errorNum=self.errorNum+1
     try:
       len(literal_eval(self.wstyle.get()))
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid winding style (wstyle), please enter a list of integers ("[" and "]" are required).'
-    
+      self.errorMsg=self.errorMsg+'\n -- invalid winding style (wstyle), please enter a list of integers (please include "[" and "]").'
+      self.errorNum=self.errorNum+1
     try:
       len(literal_eval(self.lindex.get()))
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid layer belongings (lindex), please enter a list of integers ("[" and "]" are required).'
-    
+      self.errorMsg=self.errorMsg+'\n -- invalid layer belongings (lindex), please enter a list of integers (please include "[" and "]").'
+      self.errorNum=self.errorNum+1
     try:
       len(literal_eval(self.sigmac.get()))
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid layer conductivity (sigmac), please enter a list of float values ("[" and "]" are required).'
-      
-      
-      
+      self.errorMsg=self.errorMsg+'\n -- invalid layer conductivity (sigmac), please enter a list of float values (please include "[" and "]").'
+      self.errorNum=self.errorNum+1
     try:
       float(self.mur.get())
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid relative permeability (mur), please enter a float value.'
+      self.errorMsg=self.errorMsg+'\n -- invalid relative permeability (mur), please enter a float value (no "[" or "]").'
+      self.errorNum=self.errorNum+1
     try:
       int(self.nlayer.get())
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid total number of layers (nlayer), please enter an integer.'
+      self.errorMsg=self.errorMsg+'\n -- invalid total number of layers (nlayer), please enter an integer (no "[" or "]").'
+      self.errorNum=self.errorNum+1
     try:
       int(self.nwinding.get())
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid total number of windings (nwinding), please enter an integer.'
+      self.errorMsg=self.errorMsg+'\n -- invalid total number of windings (nwinding), please enter an integer (no "[" or "]").'
+      self.errorNum=self.errorNum+1
     try:
       float(self.gt.get())
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid top gap length (gt), please enter a float value.'
+      self.errorMsg=self.errorMsg+'\n -- invalid top gap length (gt), please enter a float value (no "[" or "]").'
+      self.errorNum=self.errorNum+1
     try:
       float(self.gb.get())
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid bottom gap length (gb), please enter a float value.'
+      self.errorMsg=self.errorMsg+'\n -- invalid bottom gap length (gb), please enter a float value (no "[" or "]").'
+      self.errorNum=self.errorNum+1
     try:
-      float(self.Ae.get())
+      float(self.Ac.get())
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid effective gap area (Ae), please enter a float value.'
+      self.errorMsg=self.errorMsg+'\n -- invalid effective core gap area (Ac), please enter a float value (no "[" or "]").'
+      self.errorNum=self.errorNum+1
     try:
       float(self.le.get())
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid effective core length (le), please enter a float value.'
+      self.errorMsg=self.errorMsg+'\n -- invalid effective core length (le), please enter a float value (no "[" or "]").'
+      self.errorNum=self.errorNum+1
     try:
       float(self.c.get())
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid top and bottom core thickness (c), please enter an integer.'
+      self.errorMsg=self.errorMsg+'\n -- invalid top and bottom core thickness (c), please enter an integer (no "[" or "]").'
+      self.errorNum=self.errorNum+1
 
         # finished format check, start value check
     if self.errorMsg.strip()=='':
       nwinding=int(self.nwinding.get())
       nlayer=int(self.nlayer.get())
       if nwinding!= max(literal_eval(self.lindex.get())):
-        self.errorMsg=self.errorMsg+'\n -- _nwinding_ mismatch with _lindex_, please check if length(lindex) == nwinding ?'
+        self.errorMsg=self.errorMsg+'\n -- _nwinding_ mismatch with _lindex_, please check if list.length(lindex) equals _nwinding_ ?'
+        self.errorNum=self.errorNum+1
       if nwinding!= len(literal_eval(self.wstyle.get())):
-        self.errorMsg=self.errorMsg+'\n -- _nwinding_ mismatch with _wstyle_, please check if length(wstyle) == nwinding ?'
+        self.errorMsg=self.errorMsg+'\n -- _nwinding_ mismatch with _wstyle_, please check if list.length(wstyle) equals _nwinding_ ?'
+        self.errorNum=self.errorNum+1
       if nlayer!=len(literal_eval(self.h.get())):
-        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _h_, please check if length(h) == nlayer ?'
+        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _h_, please check if list.length(h) equals _nlayer_ ?'
+        self.errorNum=self.errorNum+1
       if nlayer!=len(literal_eval(self.sigmac.get())):
-        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _sigmac_, please check if length(sigmac) == nlayer ?'
+        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _sigmac_, please check if list.length(sigmac) equals _nlayer_ ?'
+        self.errorNum=self.errorNum+1
       if nlayer!=(len(literal_eval(self.s.get()))-1):
-        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _s_, please check if length(s) == nlayer+1 ? \n There is always one more spacing than the number of conductive layers.'
+        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _s_, please check if list.length(s) equals _nlayer+1_ ? There is always one more spacing than the number of conductive layers.'
+        self.errorNum=self.errorNum+1
       if nlayer!=(len(literal_eval(self.mus.get()))-1):
-        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _mus_, please check if length(mus) == nlayer+1 ? \n There is always one more spacing than the number of conductive layers.'
+        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _mus_, please check if list.length(mus) equals _nlayer+1_ ? There is always one more spacing than the number of conductive layers.'
+        self.errorNum=self.errorNum+1
       if nlayer!=len(literal_eval(self.w.get())):
-        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _w_, please check if length(w) == nlayer ?'
+        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _w_, please check if list.length(w) equals _nlayer_ ?'
+        self.errorNum=self.errorNum+1
       if nlayer!=len(literal_eval(self.lindex.get())):
-        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _lindex_, please check if length(lindex) == nlayer ?'
+        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _lindex_, please check if list.length(lindex) equals _nlayer_ ?'
+        self.errorNum=self.errorNum+1
       if nlayer!=len(literal_eval(self.m.get())):
-        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _m_, please check if length(m) == nlayer ?'
+        self.errorMsg=self.errorMsg+'\n -- _nlayer_ mismatch with _m_, please check if list.length(m) equals _nlayer_ ?'
+        self.errorNum=self.errorNum+1
       if self.errorMsg.strip()=='':
-        tkMessageBox.showinfo('Congratulations', message='Geometry is correct, please continue.')
+        tkMessageBox.showinfo('M2Spice - Check Geometry - Passed', message='Good! Geometry is correct! \n\nNow you can generate the netlist by clicking "Generate Netlist".')
+        self.errorNum=self.errorNum+1
       else:
-        tkMessageBox.showerror('Warnings', message='Find geometry errors:\n'+self.errorMsg)
+        tkMessageBox.showerror('M2Spice - Check Geometry - Failed', message='Find ' + str(self.errorNum) +' geometry errors:\n' + self.errorMsg)
     else:
-      tkMessageBox.showerror('Warnings', message='Find geometry errors:\n'+self.errorMsg)
+      tkMessageBox.showerror('M2Spice - Check Geometry - Failed', message='Find ' + str(self.errorNum) + ' geometry errors:\n'+ self.errorMsg)
 
 
   def printlabels(self):
@@ -315,56 +491,56 @@ class GUI(Frame):
     Label(self,text='Effective Core Area (Ac)',bg='white').grid(column=0,row=15,sticky=W)
     Label(self,text='Effective Winding Length per Turn (d)',bg='white').grid(column=0,row=16,sticky=W)
     Label(self,text='Thickness of the Top and Bottom Core (c)',bg='white').grid(column=0,row=17,sticky=W)
-    Label(self,text='--------------------------------------------',bg='white').grid(column=5,row=13,columnspan=5)
     
-    Label(self,text='Created and Maintained by:',bg='white').grid(column=5,row=14,columnspan=5)
-    Label(self,text='S.A. Pavlick, M. Chen, and D.J. Perreault',bg='white').grid(column=5,row=15,columnspan=5)
-    Label(self,text='MIT Power Electronics Research Group',bg='white').grid(column=5,row=16,columnspan=5)
-    Label(self,text='v1.0, Feb 2015, All Rights Reserved',bg='white').grid(column=5,row=17,columnspan=5)
-    
-    
-    Label(self,text='Geometry Reference Figures',bg='white').grid(column=5,row=0,columnspan=5)
+    Label(self,text='*'*20,bg='white').grid(column=0,row=18,columnspan=6)
+    Label(self,text='S.A. Pavlick, M. Chen, and D.J. Perreault',bg='white').grid(column=0,row=19,columnspan=6)
+    Label(self,text='MIT Power Electronics Research Group',bg='white').grid(column=0,row=20,columnspan=6)
+    Label(self,text='v1.0, Feb 2015',bg='white').grid(column=0,row=21,columnspan=6)
+    Label(self,text='*'*20,bg='white').grid(column=0,row=22,columnspan=6)
 
-    Label(self,text='Unit: Hz',bg='white').grid(column=3,row=1,sticky=W)
-    Label(self,text='Unit: 1',bg='white').grid(column=3,row=2,sticky=W)
-    Label(self,text='Unit: 1',bg='white').grid(column=3,row=3,sticky=W)
-    Label(self,text='Unit: meters',bg='white').grid(column=3,row=4,sticky=W)
-    Label(self,text='Unit: S/m',bg='white').grid(column=3,row=5,sticky=W)
-    Label(self,text='Unit: meters',bg='white').grid(column=3,row=6,sticky=W)
-    Label(self,text='Unit: H/m',bg='white').grid(column=3,row=7,sticky=W)
-    Label(self,text='Unit: meters',bg='white').grid(column=3,row=8,sticky=W)
-    Label(self,text='Unit: 1',bg='white').grid(column=3,row=9,sticky=W)
-    Label(self,text='Unit: 1',bg='white').grid(column=3,row=10,sticky=W)
-    Label(self,text='0=series, 1=parallel',bg='white').grid(column=3,row=11,sticky=W)
-    Label(self,text='Winding index',bg='white').grid(column=3,row=12,sticky=W)
-    Label(self,text='Unit: meters',bg='white').grid(column=3,row=13,sticky=W)
-    Label(self,text='Unit: meters',bg='white').grid(column=3,row=14,sticky=W)
-    Label(self,text='Unit: meter^2',bg='white').grid(column=3,row=15,sticky=W)
-    Label(self,text='Unit: meters',bg='white').grid(column=3,row=16,sticky=W)
-    Label(self,text='Unit: meters',bg='white').grid(column=3,row=17,sticky=W)
+    Label(self,text='Unit: Hz',bg='white').grid(column=4,row=1,sticky=W)
+    Label(self,text='Unit: 1',bg='white').grid(column=4,row=2,sticky=W)
+    Label(self,text='Unit: 1',bg='white').grid(column=4,row=3,sticky=W)
+    Label(self,text='Unit: meters',bg='white').grid(column=4,row=4,sticky=W)
+    Label(self,text='Unit: S/m',bg='white').grid(column=4,row=5,sticky=W)
+    Label(self,text='Unit: meters',bg='white').grid(column=4,row=6,sticky=W)
+    Label(self,text='Unit: H/m',bg='white').grid(column=4,row=7,sticky=W)
+    Label(self,text='Unit: meters',bg='white').grid(column=4,row=8,sticky=W)
+    Label(self,text='Unit: 1',bg='white').grid(column=4,row=9,sticky=W)
+    Label(self,text='Unit: 1',bg='white').grid(column=4,row=10,sticky=W)
+    Label(self,text='0=series, 1=parallel',bg='white').grid(column=4,row=11,sticky=W)
+    Label(self,text='Winding index',bg='white').grid(column=4,row=12,sticky=W)
+    Label(self,text='Unit: meters',bg='white').grid(column=4,row=13,sticky=W)
+    Label(self,text='Unit: meters',bg='white').grid(column=4,row=14,sticky=W)
+    Label(self,text='Unit: meter^2',bg='white').grid(column=4,row=15,sticky=W)
+    Label(self,text='Unit: meters',bg='white').grid(column=4,row=16,sticky=W)
+    Label(self,text='Unit: meters',bg='white').grid(column=4,row=17,sticky=W)
   
 
-    Label(self,text='e.g.: 1e6',bg='white').grid(column=4,row=1,sticky=W)
-    Label(self,text='e.g.: 1000',bg='white').grid(column=4,row=2,sticky=W)
-    Label(self,text='e.g.: 4',bg='white').grid(column=4,row=3,sticky=W)
-    Label(self,text='e.g.: [1e-3, 1e-3, 1e-3, 1e-3]',bg='white').grid(column=4,row=4,sticky=W)
-    Label(self,text='e.g.: [5.8e7, 5.8e7, 5.8e7, 5.8e7]',bg='white').grid(column=4,row=5,sticky=W)
-    Label(self,text='e.g.: [1e-3, 1e-3, 1e-3, 1e-3, 1e-3]',bg='white').grid(column=4,row=6,sticky=W)
-    Label(self,text='e.g.: [1.26e-6, 1.26e-6, 1.26e-6, 1.26e-6, 1.26e-6]',bg='white').grid(column=4,row=7,sticky=W)
-    Label(self,text='e.g.: [5e-3, 5e-3, 5e-3, 5e-3]',bg='white').grid(column=4,row=8,sticky=W)
-    Label(self,text='e.g.: [1, 1, 2, 1]',bg='white').grid(column=4,row=9,sticky=W)
-    Label(self,text='e.g.: 2',bg='white').grid(column=4,row=10,sticky=W)
-    Label(self,text='e.g.: [0, 1]',bg='white').grid(column=4,row=11,sticky=W)
-    Label(self,text='e.g.: [1, 2, 1, 2]',bg='white').grid(column=4,row=12,sticky=W)
-    Label(self,text='e.g.: 1e-3',bg='white').grid(column=4,row=13,sticky=W)
-    Label(self,text='e.g.: 1e-3',bg='white').grid(column=4,row=14,sticky=W)
-    Label(self,text='e.g.: 60e-6',bg='white').grid(column=4,row=15,sticky=W)
-    Label(self,text='e.g.: 2e-2',bg='white').grid(column=4,row=16,sticky=W)
-    Label(self,text='e.g.: 1e-3',bg='white').grid(column=4,row=17,sticky=W)
+    Label(self,text='e.g.: 1e6',bg='white').grid(column=5,row=1,sticky=W)
+    Label(self,text='e.g.: 1000',bg='white').grid(column=5,row=2,sticky=W)
+    Label(self,text='e.g.: 4',bg='white').grid(column=5,row=3,sticky=W)
+    Label(self,text='e.g.: [1e-3, 1e-3, 1e-3, 1e-3]',bg='white').grid(column=5,row=4,sticky=W)
+    Label(self,text='e.g.: [6e7, 6e7, 6e7, 6e7]',bg='white').grid(column=5,row=5,sticky=W)
+    Label(self,text='e.g.: [1e-3, 1e-3, 1e-3, 1e-3, 1e-3]',bg='white').grid(column=5,row=6,sticky=W)
+    Label(self,text='e.g.: [1e-6, 1e-6, 1e-6, 1e-6, 1e-6]',bg='white').grid(column=5,row=7,sticky=W)
+    Label(self,text='e.g.: [5e-3, 5e-3, 5e-3, 5e-3]',bg='white').grid(column=5,row=8,sticky=W)
+    Label(self,text='e.g.: [1, 1, 2, 1]',bg='white').grid(column=5,row=9,sticky=W)
+    Label(self,text='e.g.: 2',bg='white').grid(column=5,row=10,sticky=W)
+    Label(self,text='e.g.: [0, 1]',bg='white').grid(column=5,row=11,sticky=W)
+    Label(self,text='e.g.: [1, 2, 1, 2]',bg='white').grid(column=5,row=12,sticky=W)
+    Label(self,text='e.g.: 1e-3',bg='white').grid(column=5,row=13,sticky=W)
+    Label(self,text='e.g.: 1e-3',bg='white').grid(column=5,row=14,sticky=W)
+    Label(self,text='e.g.: 60e-6',bg='white').grid(column=5,row=15,sticky=W)
+    Label(self,text='e.g.: 2e-2',bg='white').grid(column=5,row=16,sticky=W)
+    Label(self,text='e.g.: 1e-3',bg='white').grid(column=5,row=17,sticky=W)
+
 
 
   def createentries(self):
-    self.fentry=Entry(self,textvariable=self.f,bg='yellow')
+    
+    #defining the entires
+    self.fentry=Entry(self,textvariable=self.f,bg='yellow',width=50)
     self.murentry=Entry(self,textvariable=self.mur,bg='yellow')
     self.nlayerentry=Entry(self,textvariable=self.nlayer,bg='yellow')
     self.hentry=Entry(self,textvariable=self.h,bg='yellow')
@@ -378,38 +554,41 @@ class GUI(Frame):
     self.lindexentry=Entry(self,textvariable=self.lindex,bg='yellow')
     self.gtentry=Entry(self,textvariable=self.gt,bg='yellow')
     self.gbentry=Entry(self,textvariable=self.gb,bg='yellow')
-    self.Aeentry=Entry(self,textvariable=self.Ae,bg='yellow')
+    self.Acentry=Entry(self,textvariable=self.Ac,bg='yellow')
     self.leentry=Entry(self,textvariable=self.le,bg='yellow')
     self.centry=Entry(self,textvariable=self.c,bg='yellow')
 
-    self.fentry.grid(column=1,row=1,sticky=(W,E))
-    self.murentry.grid(column=1,row=2,sticky=(W,E))
-    self.nlayerentry.grid(column=1,row=3,sticky=(W,E))
-    self.hentry.grid(column=1,row=4,sticky=(W,E))
-    self.sigmacentry.grid(column=1,row=5,sticky=(W,E))
-    self.sentry.grid(column=1,row=6,sticky=(W,E))
-    self.musentry.grid(column=1,row=7,sticky=(W,E))
-    self.wentry.grid(column=1,row=8,sticky=(W,E))
-    self.mentry.grid(column=1,row=9,sticky=(W,E))
-    self.nwindingentry.grid(column=1,row=10,sticky=(W,E))
-    self.wstyleentry.grid(column=1,row=11,sticky=(W,E))
-    self.lindexentry.grid(column=1,row=12,sticky=(W,E))
-    self.gtentry.grid(column=1,row=13,sticky=(W,E))
-    self.gbentry.grid(column=1,row=14,sticky=(W,E))
-    self.Aeentry.grid(column=1,row=15,sticky=(W,E))
-    self.leentry.grid(column=1,row=16,sticky=(W,E))
-    self.centry.grid(column=1,row=17,sticky=(W,E))
+    #positioning the entries
+    self.fentry.grid(column=1,row=1,sticky=(W,E),columnspan=2)
+    self.murentry.grid(column=1,row=2,sticky=(W,E),columnspan=2)
+    self.nlayerentry.grid(column=1,row=3,sticky=(W,E),columnspan=2)
+    self.hentry.grid(column=1,row=4,sticky=(W,E),columnspan=2)
+    self.sigmacentry.grid(column=1,row=5,sticky=(W,E),columnspan=2)
+    self.sentry.grid(column=1,row=6,sticky=(W,E),columnspan=2)
+    self.musentry.grid(column=1,row=7,sticky=(W,E),columnspan=2)
+    self.wentry.grid(column=1,row=8,sticky=(W,E),columnspan=2)
+    self.mentry.grid(column=1,row=9,sticky=(W,E),columnspan=2)
+    self.nwindingentry.grid(column=1,row=10,sticky=(W,E),columnspan=2)
+    self.wstyleentry.grid(column=1,row=11,sticky=(W,E),columnspan=2)
+    self.lindexentry.grid(column=1,row=12,sticky=(W,E),columnspan=2)
+    self.gtentry.grid(column=1,row=13,sticky=(W,E),columnspan=2)
+    self.gbentry.grid(column=1,row=14,sticky=(W,E),columnspan=2)
+    self.Acentry.grid(column=1,row=15,sticky=(W,E),columnspan=2)
+    self.leentry.grid(column=1,row=16,sticky=(W,E),columnspan=2)
+    self.centry.grid(column=1,row=17,sticky=(W,E),columnspan=2)
 
   def createbuttons(self):
-    buttonframe=Frame(self, bg='white')
-    Button(buttonframe, text='Load Geometry', command=self.loadgeom).pack(side=LEFT,padx=5)
-    Button(buttonframe, text='Save Geometry', command=self.savegeom).pack(side=LEFT,padx=5)
-    Button(buttonframe, text='Clear Geometry', command=self.resetgeom).pack(side=LEFT,padx=5)
-    Button(buttonframe, text='Check Geometry', command=self.checkgeom).pack(side=LEFT,padx=5)
-    Button(buttonframe, text='Generate Netlist',command=self.generate_netlist_errors).pack(side=LEFT,padx=5)
-    buttonframe.grid(row=0, columnspan=5)
-
-    #netlist_button.configure(command=self.generate_netlist_errors)
+    custom = tkFont.Font(size=12, weight='bold')  # you don't have to use Helvetica or bold, this is just an example
+    buttonframe=Frame(self, bg='white', height=3)
+    Button(buttonframe, text='Load Geometry', command=self.loadgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Save Geometry', command=self.savegeom, font=custom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Clear Geometry', command=self.resetgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Geometry Editor', command=self.editgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Check Geometry', command=self.checkgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Generate Netlist',command=self.try_generate_netlist, font=custom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Design Guide',command=self.create_window, font=custom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Netlist Viewer',command=self.viewnetlist, font=custom).pack(side=LEFT,padx=5,pady=5)
+    buttonframe.grid(row=0, columnspan=7)
 
   def getImpe(self):
  
@@ -425,7 +604,7 @@ class GUI(Frame):
     gb=float(self.gb.get())
     f=float(self.f.get())
     c=float(self.c.get())
-    Ae=float(self.Ae.get())
+    Ac=float(self.Ac.get())
 
     d=le #effective length of the winding
 
@@ -444,8 +623,8 @@ class GUI(Frame):
       Xs.append(complex(0,1)*(f*2*math.pi)*mus[i1+1]*s[i1+1]*d/w[i1])
 
     #impedance for the ferrite core
-    Xfb=complex(0,1)*(f*2*math.pi)*4*math.pi*1e-7*Ae/(gt+Ae*w[i1]/(mur*c*d))
-    Xft=complex(0,1)*(f*2*math.pi)*4*math.pi*1e-7*Ae/(gb+Ae*w[i1]/(mur*c*d))
+    Xfb=complex(0,1)*(f*2*math.pi)*4*math.pi*1e-7*Ac/(gt+Ac*w[i1]/(mur*c*d))
+    Xft=complex(0,1)*(f*2*math.pi)*4*math.pi*1e-7*Ac/(gb+Ac*w[i1]/(mur*c*d))
     Xts=complex(0,1)*(f*2*math.pi)*mus[0]*s[0]*d/w[i1]
 
     #calculate output
@@ -462,156 +641,184 @@ class GUI(Frame):
   def generate_netlist(self):
 
     self.asksaveasnetlistfilename()
+    if self.netlistfilename:
 
-    sigmac=literal_eval(self.sigmac.get())
-    mur=float(self.mur.get())
-    NumofLayer=int(self.nlayer.get())
-    NumofWinding=int(self.nwinding.get())
-    h=literal_eval(self.h.get())
-    s=literal_eval(self.s.get())
-    mus=literal_eval(self.mus.get())
-    w=literal_eval(self.w.get())
-    m=literal_eval(self.m.get())
-    WindingStyle=literal_eval(self.wstyle.get())
-    WindingIndex=literal_eval(self.lindex.get())
-    gt=float(self.gt.get())
-    gb=float(self.gb.get())
-    Ae=float(self.Ae.get())
-    le=float(self.le.get())
-    c=float(self.c.get())
+        sigmac=literal_eval(self.sigmac.get())
+        mur=float(self.mur.get())
+        NumofLayer=int(self.nlayer.get())
+        NumofWinding=int(self.nwinding.get())
+        h=literal_eval(self.h.get())
+        s=literal_eval(self.s.get())
+        mus=literal_eval(self.mus.get())
+        w=literal_eval(self.w.get())
+        m=literal_eval(self.m.get())
+        WindingStyle=literal_eval(self.wstyle.get())
+        WindingIndex=literal_eval(self.lindex.get())
+        gt=float(self.gt.get())
+        gb=float(self.gb.get())
+        Ac=float(self.Ac.get())
+        le=float(self.le.get())
+        c=float(self.c.get())
 
-    self.getImpe()
-
-
-    Serieslayers={}
-    #Repeat and summarizing the input information
-    f=open(self.netlistfilename,'w')
-    
-    #Generate netlist identification information
-    localtime = time.asctime( time.localtime(time.time()))
-    user = getpass.getuser()
-    f.write('\n******************************************************************')
-    f.write('\n*        {0}    by {1}'.format(localtime,user))
-    f.write('\n******************************************************************')
-    
-    #Start describing the transformer structure
-    f.write('\n******************************************************************')
-    f.write('\n******* Comprehensive  Summary of the Magnetic Structure  ********')
-    f.write('\n******************************************************************')
-    f.write('\n\n* This planar structure has {0} windings and {1} layers'.format(NumofWinding, NumofLayer))
-
-    for index_winding in range(NumofWinding):
-        #Parallel Connected
-      if WindingStyle[index_winding]==1:
-        f.write('\n\n* -> Winding {0} is Parallel Connected'.format(index_winding+1))
-        totalturn=0
-        for index_layer in range(NumofLayer):
-          if WindingIndex[index_layer]==index_winding+1:
-            f.write('\n* --> Includes Layer {}'.format(index_layer+1))
-            f.write('\n* ---> thickness {}, width {}, turns {}, spacing above {:4.2f}m, spacing below {:4.2f}m'.format(h[index_layer], w[index_layer], m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
-            totalturn=totalturn+m[index_layer]
-        f.write('\n* -> Winding {0} has {1} total turns; \n* --> External Port Name: PortP{0}, PortN{0}'.format(index_winding+1, totalturn))
-
-    
-        #Series Connected
-      if WindingStyle[index_winding]==0:
-        f.write('\n\n* -> Winding {0} is Series Connected;'.format(index_winding+1))
-        numSeriesLayers=1
-        totalturn=0
-        for index_layer in range(NumofLayer):
-          if WindingIndex[index_layer]==index_winding+1:
-            f.write('\n* --> Includes Layer {}'.format(index_layer+1))
-            f.write('\n* ---> thickness {}, width {}, turns {}, spacing above {:4.2f}m, spacing below {:4.2f}m'.format(h[index_layer], w[index_layer], m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
-            numSeriesLayers+=1
-            totalturn=totalturn+m[index_layer]
-        f.write('\n* -> Winding {0} has {1} total turns; \n* --> External Port Name: PortP{0}, PortN{0}'.format(index_winding+1, totalturn))
-
-    f.write('\n******************************************************************\n')
-
-    f.write('\n******************************************************************')
-    f.write('\n*****                   Netlist Starts                    ********')
-    f.write('\n******************************************************************')
-
-    #Generate the SPICE netlist
-    for index in range(NumofLayer):
-      ra=self.Ra[index]
-      la=self.La[index]
-      rb=self.Rb[index]
-      lb=self.Lb[index]
-      ls=self.Ls[index]
-      mx=m[index]
-
-      f.write('\n\n*NetList for Layer {}'.format(index+1))
-      f.write('\nLe{0} N{0} P{0} {1}'.format(index,mx**2))
-      f.write('\nLi{0} G Md{0} {1}'.format(index,1))
-      f.write('\nLg{0} Mg{0} Md{0} {1:14.2f}p'.format(index,lb*1e12))
-      f.write('\nRg{0} Mc{0} Mg{0} {1:14.2f}m'.format(index,rb*1e3))
-      f.write('\nRt{0} Mc{0} Mt{0} {1:14.2f}u'.format(index,ra*1e6))
-      f.write('\nRb{0} Mb{0} Mc{0} {1:14.2f}u'.format(index,ra*1e6))
-      f.write('\nLt{0} T{0} Mt{0} {1:14.2f}p'.format(index,la*1e12))
-      f.write('\nLb{0} Mb{0} B{0} {1:14.2f}p'.format(index,la*1e12))
-      f.write('\nLs{0} B{0} T{1} {2:14.2f}n'.format(index,index+1,ls*1e9))
-      f.write('\nK{0} Le{0} Li{0} 1'.format(index))
-
-    #Print the ferrite cores and top spacing
-    f.write('\n\n*NetList for Top and Bottom Ferrites, as well as the First Spacing on Top Side')
-    f.write('\nLft T0 G {:14.2f}u'.format(self.Lft*1e6))
-    f.write('\nLfb T{} G {:14.2f}u'.format(NumofLayer+1,self.Lfb*1e6))
-    f.write('\nLs0 T1 T0 {:14.2f}n'.format(self.Lts*1e9))
-
-    #Print the external connections
-    f.write('\n\n*NetList for Winding Interconnects')
-    f.write('\n*A few 1n ohm resistors are used as short interconnects')
-
-    #Create External Winding Ports
-    for index_winding in range(NumofWinding):
-      #Parallel Connected
-      if WindingStyle[index_winding]==1:
-        f.write('\n\n* -> Winding {} is Parallel Connected'.format(index_winding+1))
-        for index_layer in range(NumofLayer):
-          if WindingIndex[index_layer]==index_winding+1:
-            f.write('\n* -->Include layer {}'.format(index_layer+1))
-            f.write('\nRexP{0} PortP{1} P{0}    1n'.format(index_layer+1,index_winding+1))
-            f.write('\nRexN{0} PortN{1} N{0}    1n'.format(index_layer+1,index_winding+1))
+        self.getImpe()
 
 
-      #Series Connected
-      if WindingStyle[index_winding]==0:
-        f.write('\n\n* -> Winding {} is Series Connected'.format(index_winding+1))
+        Serieslayers={}
+        #Repeat and summarizing the input information
+        f=open(self.netlistfilename,'w')
         
-        #identify which layers it contains
-        numSeriesLayers=1
-        for index_layer in range(NumofLayer):
-          if WindingIndex[index_layer]==index_winding+1:
-            f.write('\n* -->Include layer {}'.format(index_layer+1))
-            Serieslayers[numSeriesLayers]=index_layer+1
-            numSeriesLayers+=1
-        #defining two wires from external port to the front and end layers
-        f.write('\nRexP{0} PortP{1} P{0}    1n'.format(Serieslayers[1],index_winding+1))
-        f.write('\nRexN{0} PortN{1} N{0}    1n'.format(Serieslayers[numSeriesLayers-1],index_winding+1))
-        #defining the interconnects among series connected layers
-        for index_SeriesLayers in range(numSeriesLayers-2):
-          f.write('\nRexM{0} N{0} P{1}      1n'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2]))
+        #Generate netlist identification information
+        localtime = time.asctime( time.localtime(time.time()))
+        user = getpass.getuser()
+        f.write('\n******************************************************************')
+        f.write('\n*****        {0} by {1}          *****'.format(localtime,user))
+        f.write('\n******************************************************************')
+        
+        #Start describing the transformer structure
+        f.write('\n******************************************************************')
+        f.write('\n******* Comprehensive  Summary of the Magnetic Structure  ********')
+        f.write('\n******* Please double check the geometry information and  ********')
+        f.write('\n**** use the external Port Name to interface with your circuit ***')
+        f.write('\n******************************************************************')
+        f.write('\n\n* This planar structure has {0} windings and {1} layers'.format(NumofWinding, NumofLayer))
+
+        for index_winding in range(NumofWinding):
+            #Parallel Connected
+          if WindingStyle[index_winding]==1:
+            f.write('\n\n* -> All layers in winding {0} are Parallel Connected; \n* -> Its external Port Name: PortP{0}, PortN{0}'.format(index_winding+1))
+            totalturn=0
+            for index_layer in range(NumofLayer):
+              if WindingIndex[index_layer]==index_winding+1:
+                f.write('\n* --> Includes Layer {}'.format(index_layer+1))
+                f.write('\n* ---> thickness {}, width {}, turns {}, spacing above {:4.2f}m, spacing below {:4.2f}m'.format(h[index_layer], w[index_layer], m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
+                totalturn=totalturn+m[index_layer]
+            f.write('\n* -> Winding {0} has {1} total turns;'.format(index_winding+1, totalturn))
+
+        
+            #Series Connected
+          if WindingStyle[index_winding]==0:
+            f.write('\n\n* -> All layers in winding {0} are Series Connected; \n* -> Its external Port Name: PortP{0}, PortN{0}'.format(index_winding+1))
+            numSeriesLayers=1
+            totalturn=0
+            for index_layer in range(NumofLayer):
+              if WindingIndex[index_layer]==index_winding+1:
+                f.write('\n* --> Includes Layer {}'.format(index_layer+1))
+                f.write('\n* ---> thickness {}, width {}, turns {}, spacing above {:4.2f}m, spacing below {:4.2f}m'.format(h[index_layer], w[index_layer], m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
+                numSeriesLayers+=1
+                totalturn=totalturn+m[index_layer]
+            f.write('\n* -> Winding {0} has {1} total turns;'.format(index_winding+1, totalturn))
+
+        f.write('\n******************************************************************\n')
+
+        f.write('\n******************************************************************')
+        f.write('\n*****                   Netlist Starts                    ********')
+        f.write('\n******************************************************************')
+
+        #Generate the SPICE netlist
+        for index in range(NumofLayer):
+          ra=self.Ra[index]
+          la=self.La[index]
+          rb=self.Rb[index]
+          lb=self.Lb[index]
+          ls=self.Ls[index]
+          mx=m[index]
+
+          f.write('\n\n*NetList for Layer {}'.format(index+1))
+          f.write('\nLe{0} N{0} P{0} {1}'.format(index,mx**2))
+          f.write('\nLi{0} G Md{0} {1}'.format(index,1))
+          f.write('\nLg{0} Mg{0} Md{0} {1:14.2f}p'.format(index,lb*1e12))
+          f.write('\nRg{0} Mc{0} Mg{0} {1:14.2f}m'.format(index,rb*1e3))
+          f.write('\nRt{0} Mc{0} Mt{0} {1:14.2f}u'.format(index,ra*1e6))
+          f.write('\nRb{0} Mb{0} Mc{0} {1:14.2f}u'.format(index,ra*1e6))
+          f.write('\nLt{0} T{0} Mt{0} {1:14.2f}p'.format(index,la*1e12))
+          f.write('\nLb{0} Mb{0} B{0} {1:14.2f}p'.format(index,la*1e12))
+          f.write('\nLs{0} B{0} T{1} {2:14.2f}n'.format(index,index+1,ls*1e9))
+          f.write('\nK{0} Le{0} Li{0} 1'.format(index))
+
+        #Print the ferrite cores and top spacing
+        f.write('\n\n*NetList for Top and Bottom Ferrites, as well as the First Spacing on Top Side')
+        f.write('\nLft T0 G {:14.2f}u'.format(self.Lft*1e6))
+        f.write('\nLfb T{} G {:14.2f}u'.format(NumofLayer+1,self.Lfb*1e6))
+        f.write('\nLs0 T1 T0 {:14.2f}n'.format(self.Lts*1e9))
+
+        #Print the external connections
+        f.write('\n\n*NetList for Winding Interconnects')
+        f.write('\n*A few 1n ohm resistors are used as short interconnects')
+
+        #Create External Winding Ports
+        for index_winding in range(NumofWinding):
+          #Parallel Connected
+          if WindingStyle[index_winding]==1:
+            f.write('\n\n* -> Winding {} is Parallel Connected'.format(index_winding+1))
+            for index_layer in range(NumofLayer):
+              if WindingIndex[index_layer]==index_winding+1:
+                f.write('\n* -->Include layer {}'.format(index_layer+1))
+                f.write('\nRexP{0} PortP{1} P{0}    1n'.format(index_layer+1,index_winding+1))
+                f.write('\nRexN{0} PortN{1} N{0}    1n'.format(index_layer+1,index_winding+1))
+
+
+          #Series Connected
+          if WindingStyle[index_winding]==0:
+            f.write('\n\n* -> Winding {} is Series Connected'.format(index_winding+1))
+            
+            #identify which layers it contains
+            numSeriesLayers=1
+            for index_layer in range(NumofLayer):
+              if WindingIndex[index_layer]==index_winding+1:
+                f.write('\n* -->Include layer {}'.format(index_layer+1))
+                Serieslayers[numSeriesLayers]=index_layer+1
+                numSeriesLayers+=1
+            #defining two wires from external port to the front and end layers
+            f.write('\nRexP{0} PortP{1} P{0}    1n'.format(Serieslayers[1],index_winding+1))
+            f.write('\nRexN{0} PortN{1} N{0}    1n'.format(Serieslayers[numSeriesLayers-1],index_winding+1))
+            #defining the interconnects among series connected layers
+            for index_SeriesLayers in range(numSeriesLayers-2):
+              f.write('\nRexM{0} N{0} P{1}      1n'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2]))
 
 
 
-    #netlist finalized
-    f.write('\n******************************************************************')
-    f.write('\n*****                   Netlist Ends                      ********')
-    f.write('\n******************************************************************')
-    f.close()
-    tkMessageBox.showinfo(message='Successfully Generated Netlist')
-  
-  def generate_netlist_errors(self):
+        #netlist finalized
+        f.write('\n******************************************************************')
+        f.write('\n*****                   Netlist Ends                      ********')
+        f.write('\n******************************************************************')
+        f.close()
+        
+        result=tkMessageBox.askyesno('M2Spice - Conversion Finished!', message='Successfully generated the netlist! The netlist is saved at:\n\n'  + self.netlistfilename +'\n\n Do you want to open the netlist now?')
+        if result==True:
+            f=open(self.netlistfilename,'r')
+            netlist=f.read()
+            f.close()
+            viewer = tk.Toplevel(self, bg='white', width=550,height=500)
+            viewer.title("M2Spice - Netlist Viewer")
+            viewarea = tk.Frame(viewer,height=100,width=50,bg='white',borderwidth=1)
+            viewscrollbar=tk.Scrollbar(viewarea)
+            editArea=tk.Text(viewarea,width=70,height=30,wrap="word",yscrollcommand=viewscrollbar.set,borderwidth=0,highlightthickness=0)
+            viewscrollbar.config(command=editArea.yview)
+            viewscrollbar.pack(side="right",fill="y")
+            editArea.pack(side="left",fill="both",expand=True)
+            editArea.insert(tk.INSERT,netlist)
+            viewarea.place(x=20,y=20)
+        
+            sw = viewer.winfo_screenwidth()
+            sh = viewer.winfo_screenheight()
+            w = int(sw*0.4)
+            h = int(sh*0.6)
+            x = sw-w
+            y = sh-h
+            viewer.geometry('%dx%d+%d+%d' % (w, h, x, y))
+
+  def try_generate_netlist(self):
     try:
       self.generate_netlist()
     except Exception as e:
-      tkMessageBox.showerror(message='Conversion Failed. System reported the following errors: \n\n' +e.message + '\n\nPlease check the geometry status again.')
+      tkMessageBox.showerror('M2Spice - Conversion Failed', message='Failed to generate the netlist. System reported the following errors: \n\n' +e.message + '\n\nPossible reason: 1. invalid saving address; 2. invalid geometry format'+'\n\nPlease check the saving address and geometry status.')
+
+
 
 class ScrollbarFrame(Frame):
   def __init__(self, root):
-    Frame.__init__(self, root,height=400,width=1000)
-    self.canvas = Canvas(root, borderwidth=0, bg='white')
+    Frame.__init__(self, root,height=800,width=900)
+    self.canvas = Canvas(root, borderwidth=2, bg='white')
     self.frame = GUI(root)
     self.hsb = Scrollbar(root, orient="horizontal", command=self.canvas.xview)
     self.vsb = Scrollbar(root, orient="vertical", command=self.canvas.yview)
@@ -619,14 +826,20 @@ class ScrollbarFrame(Frame):
 
     self.vsb.pack(side="right", fill="y")
     self.hsb.pack(side="bottom",fill="x")
-    self.canvas.pack(side="top", fill="both", expand=True)
+    self.canvas.pack(side="top", fill="both", expand=TRUE, padx=30,pady=10)
     self.canvas.create_window((4,4),window=self.frame, anchor="nw", tags="self.frame")
 
     self.frame.bind("<Configure>", self.OnFrameConfigure)
+    #self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+    
 
   def OnFrameConfigure(self, event):
     '''Reset the scroll region to encompass the inner frame'''
     self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+
+  def _on_mousewheel(self, event):
+    self.canvas.yview_scroll(-1*(event.delta), "units")
+
 
 if __name__=='__main__':
     
