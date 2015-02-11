@@ -256,8 +256,10 @@ class GUI(Frame):
     
     def reseteditgeom():
         cleartag = tkMessageBox.askyesno('M2Spice - Clear Geometry', message='Do you really want to clear the geometry information? All unsaved data will be lost.')
+        editor.lift()
         if cleartag==True:
             editArea.delete(1.0, END)
+            
 
     def loadeditgeom():
         try:
@@ -309,14 +311,14 @@ class GUI(Frame):
         except Exception as e:
             tkMessageBox.showerror('M2Spice - Forward Geometry - Failed', message='Failed to forward geometry.\n\nSystem reported the following errors: \n\n' +e.message + '\n\nPossible reasons: 1. invalid loading address; 2.invalid geometry format.' + '\n\nPlease check the loading address and geometry format.')
 
-    custom = tkFont.Font(size=12, weight='bold')  # you don't have to use Helvetica or bold, this is just an example
+    custom = tkFont.Font(family="Helvetica",size=9,weight="bold")
     
     buttonframe=Frame(editor, bg='white', height=3)
     Button(buttonframe, text='Load Geometry', command=loadeditgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
     Button(buttonframe, text='Save Geometry', command=saveeditgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
     Button(buttonframe, text='Clear Geometry', command=reseteditgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
     Button(buttonframe, text='Forward Geometry', command=forwardeditgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
-    buttonframe.grid(row=0, columnspan=5)
+    buttonframe.grid(row=0, columnspan=1)
                
   def viewnetlist(self):
     try:
@@ -338,8 +340,8 @@ class GUI(Frame):
         sh = viewer.winfo_screenheight()
         w = int(sw*0.4)
         h = int(sh*0.6)
-        x = sw-w
-        y = sw-h
+        x = w/2
+        y = h/2
         viewer.geometry('%dx%d+%d+%d' % (w, h, x, y))
     except Exception as e:
       tkMessageBox.showerror('M2Spice - Netlist Viewer - Failed', message='Failed to open netlist.\n\nSystem reported the following errors: \n\n' +e.message + '\n\nPossible reasons: 1. invalid netlist address; 2.invalid netlist file.' + '\n\nPlease check the netlist address and netlist file.')
@@ -578,7 +580,7 @@ class GUI(Frame):
     self.centry.grid(column=1,row=17,sticky=(W,E),columnspan=2)
 
   def createbuttons(self):
-    custom = tkFont.Font(size=12, weight='bold')  # you don't have to use Helvetica or bold, this is just an example
+    custom = tkFont.Font(family="Helvetica",size=9,weight="bold")
     buttonframe=Frame(self, bg='white', height=3)
     Button(buttonframe, text='Load Geometry', command=self.loadgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
     Button(buttonframe, text='Save Geometry', command=self.savegeom, font=custom).pack(side=LEFT,padx=5,pady=5)
