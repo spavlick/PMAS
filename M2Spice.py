@@ -208,9 +208,9 @@ class GUI(Frame):
                 loadvar = loadvar + line.split()[0] + ', '
         f.close()
         if (len(loadvar.split())==17):
-            tkMessageBox.showinfo('M2Spice - Forward Geometry - Forwarded', message='Successfully forwarded all parameters. Please double check the geometry format in the GUI, and clicking "Check Geometry" in the main GUI).')
+            tkMessageBox.showinfo('M2Spice - Load Geometry - Loaded', message='Successfully loaded all parameters. Please double check the geometry format in the GUI, and clicking "Check Geometry" in the main GUI).')
         else:
-            tkMessageBox.showinfo('M2Spice - Forward Geometry - Partially Loaded', message='Some parameters are missing. Please double check the geometry format.')
+            tkMessageBox.showinfo('M2Spice - Load Geometry - Partially Loaded', message='Some parameters are missing. Please double check the geometry format.')
     except Exception as e:
       tkMessageBox.showerror('M2Spice - Load Geometry - Failed', message='Failed to load geometry.\n\nSystem reported the following errors: \n\n' +e.message + '\n\nPossible reasons: 1. invalid loading address; 2.invalid geometry format.' + '\n\nPlease check the loading address and geometry format.')
 
@@ -271,7 +271,6 @@ class GUI(Frame):
                 editArea.insert(tk.INSERT,netlist)
                 f.close()
                 editor.lift()
-        #tkMessageBox.showinfo('Load Report - Loaded', message='Successfully loaded geometry.\n\nPlease check the geometry format by clicking "Check Geometry").')
         except Exception as e:
                 tkMessageBox.showerror('M2Spice - Load Geometry - Failed', message='Failed to load geometry.\n\nSystem reported the following errors: \n\n' +e.message + '\n\nPossible reasons: 1. invalid loading address; 2.invalid geometry format.' + '\n\nPlease check the loading address and geometry format.')
 
@@ -304,20 +303,20 @@ class GUI(Frame):
                     self.entries[line.split()[0]].insert(0,line.split()[2])
                     fwdvar = fwdvar + line.split()[0] + ', '
             if (len(fwdvar.split())==17):
-                tkMessageBox.showinfo('M2Spice - Forward Geometry - Forwarded', message='Successfully forwarded all parameters. Please double check the geometry format in the GUI, and clicking "Check Geometry" in the main GUI).')
+                tkMessageBox.showinfo('M2Spice - Forward Geometry - Forwarded', message='Successfully forwarded all parameters to the GUI. Please double check the geometry format in the GUI, then click "Check Geometry".')
                 editor.lower()
             else:
                 tkMessageBox.showinfo('M2Spice - Forward Geometry - Partially Forwarded', message='Some parameters are missing. Please double check the geometry format.')
         except Exception as e:
             tkMessageBox.showerror('M2Spice - Forward Geometry - Failed', message='Failed to forward geometry.\n\nSystem reported the following errors: \n\n' +e.message + '\n\nPossible reasons: 1. invalid loading address; 2.invalid geometry format.' + '\n\nPlease check the loading address and geometry format.')
 
-    custom = tkFont.Font(family="Helvetica",size=9,weight="bold")
+    custom = tkFont.Font(family="Helvetica",size=12,weight="bold")
     
     buttonframe=Frame(editor, bg='white', height=3)
-    Button(buttonframe, text='Load Geometry', command=loadeditgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
-    Button(buttonframe, text='Save Geometry', command=saveeditgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
-    Button(buttonframe, text='Clear Geometry', command=reseteditgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
-    Button(buttonframe, text='Forward Geometry', command=forwardeditgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Load Geometry', command=loadeditgeom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Save Geometry', command=saveeditgeom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Clear Geometry', command=reseteditgeom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Forward Geometry', command=forwardeditgeom).pack(side=LEFT,padx=5,pady=5)
     buttonframe.grid(row=0, columnspan=1)
                
   def viewnetlist(self):
@@ -580,16 +579,15 @@ class GUI(Frame):
     self.centry.grid(column=1,row=17,sticky=(W,E),columnspan=2)
 
   def createbuttons(self):
-    custom = tkFont.Font(family="Helvetica",size=9,weight="bold")
     buttonframe=Frame(self, bg='white', height=3)
-    Button(buttonframe, text='Load Geometry', command=self.loadgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
-    Button(buttonframe, text='Save Geometry', command=self.savegeom, font=custom).pack(side=LEFT,padx=5,pady=5)
-    Button(buttonframe, text='Clear Geometry', command=self.resetgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
-    Button(buttonframe, text='Geometry Editor', command=self.editgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
-    Button(buttonframe, text='Check Geometry', command=self.checkgeom, font=custom).pack(side=LEFT,padx=5,pady=5)
-    Button(buttonframe, text='Generate Netlist',command=self.try_generate_netlist, font=custom).pack(side=LEFT,padx=5,pady=5)
-    Button(buttonframe, text='Design Guide',command=self.create_window, font=custom).pack(side=LEFT,padx=5,pady=5)
-    Button(buttonframe, text='Netlist Viewer',command=self.viewnetlist, font=custom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Load Geometry', command=self.loadgeom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Save Geometry', command=self.savegeom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Clear Geometry', command=self.resetgeom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Geometry Editor', command=self.editgeom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Check Geometry', command=self.checkgeom).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Generate Netlist',command=self.try_generate_netlist).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Design Guide',command=self.create_window).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Netlist Viewer',command=self.viewnetlist).pack(side=LEFT,padx=5,pady=5)
     buttonframe.grid(row=0, columnspan=7)
 
   def getImpe(self):
