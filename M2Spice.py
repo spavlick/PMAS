@@ -124,8 +124,8 @@ class GUI(Frame):
   def centerWindow(self):
     sw = self.root.winfo_screenwidth()
     sh = self.root.winfo_screenheight()
-    w = min(int(sw*0.8),1200)
-    h = min(int(sh*0.75),800)
+    w = int(sw*0.5)
+    h = int(sh*0.4)
     x = (sw - w)/2
     y = (sh - h)/2
     self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
@@ -134,7 +134,9 @@ class GUI(Frame):
     '''Reset the scroll region to encompass the inner frame'''
     self.canvas.configure(scrollregion=self.canvas.bbox("all"))
   
-  def create_window(self):
+  
+  #
+  def designref(self):
     img = tk.Toplevel(self)
     img.title("M2Spice - Design Reference")
     
@@ -586,7 +588,7 @@ class GUI(Frame):
     Button(buttonframe, text='Geometry Editor', command=self.editgeom).pack(side=LEFT,padx=5,pady=5)
     Button(buttonframe, text='Check Geometry', command=self.checkgeom).pack(side=LEFT,padx=5,pady=5)
     Button(buttonframe, text='Generate Netlist',command=self.try_generate_netlist).pack(side=LEFT,padx=5,pady=5)
-    Button(buttonframe, text='Design Guide',command=self.create_window).pack(side=LEFT,padx=5,pady=5)
+    Button(buttonframe, text='Design Guide',command=self.designref).pack(side=LEFT,padx=5,pady=5)
     Button(buttonframe, text='Netlist Viewer',command=self.viewnetlist).pack(side=LEFT,padx=5,pady=5)
     buttonframe.grid(row=0, columnspan=7)
 
