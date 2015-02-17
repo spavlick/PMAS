@@ -124,8 +124,8 @@ class GUI(Frame):
   def centerWindow(self):
     sw = self.root.winfo_screenwidth()
     sh = self.root.winfo_screenheight()
-    w = int(sw*0.8)
-    h = int(sh*0.75)
+    w = min(int(sw*0.8),1200)
+    h = min(int(sh*0.75),800)
     x = (sw - w)/2
     y = (sh - h)/2
     self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
