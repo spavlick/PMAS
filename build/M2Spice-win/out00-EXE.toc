@@ -1,0 +1,9 @@
+('C:\\Users\\Minjie\\Dropbox\\Research\\M2Spice\\Python\\dist\\M2Spice.exe',
+ False,
+ False,
+ 'icon.ico',
+ None,
+ [],
+ None,
+ False,
+ 1423263374L)

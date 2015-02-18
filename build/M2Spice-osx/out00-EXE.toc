@@ -1,0 +1,9 @@
+('/Users/Minjie-MAC/Dropbox (Personal)/Research/M2Spice/Python/dist/M2Spice',
+ False,
+ False,
+ None,
+ None,
+ [],
+ None,
+ False,
+ 1423549413)

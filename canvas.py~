@@ -1,8 +1,0 @@
-from gui import GUI
-from Tkinter import *
-from ttk import *
-
-class ScrollCanvas(Canvas):
-  def __init__(self,root):
-    self.root=root
-    Canvas.__init__(self,self.root)
