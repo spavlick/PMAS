@@ -205,12 +205,12 @@ class GUI(Frame):
         f=open(self.geofilename,'r')
         for line in f:
             line_cell=line.split()
-            if (len(line_cell)==3):
-                self.entries[line.split()[0]].insert(0,line.split()[2])
+            if (len(line_cell)>=3):
+                self.entries[line.split()[0]].insert(0,line.split(None,2)[2])
                 loadvar = loadvar + line.split()[0] + ', '
         f.close()
         if (len(loadvar.split())==17):
-            tkMessageBox.showinfo('M2Spice - Load Geometry - Loaded', message='Successfully loaded all parameters. Please double check the geometry format in the GUI, and clicking "Check Geometry" in the main GUI).')
+            tkMessageBox.showinfo('M2Spice - Load Geometry - Loaded', message='Successfully loaded all parameters. Please double check the geometry format in the GUI, then click "Check Geometry").')
         else:
             tkMessageBox.showinfo('M2Spice - Load Geometry - Partially Loaded', message='Some parameters are missing. Please double check the geometry format.')
     except Exception as e:
@@ -301,8 +301,8 @@ class GUI(Frame):
             geoinfo = os.linesep.join([s for s in geoinfo.splitlines() if s])
             for line in geoinfo.splitlines():
                 line_cell=line.split()
-                if (len(line_cell)==3):
-                    self.entries[line.split()[0]].insert(0,line.split()[2])
+                if (len(line_cell)>=3):
+                    self.entries[line.split()[0]].insert(0,line.split(None,2)[2])
                     fwdvar = fwdvar + line.split()[0] + ', '
             if (len(fwdvar.split())==17):
                 tkMessageBox.showinfo('M2Spice - Forward Geometry - Forwarded', message='Successfully forwarded all parameters to the GUI. Please double check the geometry format in the GUI, then click "Check Geometry".')
