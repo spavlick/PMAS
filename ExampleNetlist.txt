@@ -1,6 +1,6 @@
 
 ******************************************************************
-*****        Wed Feb 18 17:06:09 2015 by Minjie          *****
+*****        Thu Feb 26 20:32:19 2015 by Minjie          *****
 ******************************************************************
 ******************************************************************
 ******* Comprehensive  Summary of the Magnetic Structure  ********
@@ -13,17 +13,17 @@
 * -> All layers in winding 1 are Series Connected; 
 * -> Its external Port Name: PortP1, PortN1
 * --> Includes Layer 1
-* ---> thickness 1.75e-05, width 0.005, turns 1, spacing above 1.35m, spacing below 0.79m
+* ---> thickness 17.50um, width 5.00mm, turns 1, spacing above 1.35mm, spacing below 0.79mm
 * --> Includes Layer 4
-* ---> thickness 1.75e-05, width 0.005, turns 1, spacing above 0.79m, spacing below 1.35m
+* ---> thickness 17.50um, width 5.00mm, turns 1, spacing above 0.79mm, spacing below 1.35mm
 * -> Winding 1 has 2 total turns;
 
 * -> All layers in winding 2 are Parallel Connected; 
 * -> Its external Port Name: PortP2, PortN2
 * --> Includes Layer 2
-* ---> thickness 1.75e-05, width 0.005, turns 1, spacing above 0.79m, spacing below 0.14m
+* ---> thickness 17.50um, width 5.00mm, turns 1, spacing above 0.79mm, spacing below 0.14mm
 * --> Includes Layer 3
-* ---> thickness 1.75e-05, width 0.005, turns 2, spacing above 0.14m, spacing below 0.79m
+* ---> thickness 17.50um, width 5.00mm, turns 2, spacing above 0.14mm, spacing below 0.79mm
 * -> Winding 2 has 3 total turns;
 ******************************************************************
 
@@ -80,8 +80,8 @@ Ls3 B3 T4         103.91n
 K3 Le3 Li3 1
 
 *NetList for Top and Bottom Ferrites, as well as the First Spacing on Top Side
-Lft T0 G           0.34u
-Lfb T5 G           0.69u
+Lft T0 G           0.69u
+Lfb T5 G           0.34u
 Ls0 T1 T0          77.93n
 
 *NetList for Winding Interconnects

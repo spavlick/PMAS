@@ -14,9 +14,6 @@ import sys,os
 import ScrolledText as tkst
 import tkFont
 
-
-
-
 class GUI(Frame):
   def __init__(self,root):
     self.root=root
@@ -42,9 +39,9 @@ class GUI(Frame):
     self.mur=StringVar()        #relative permeability
     self.nlayer=StringVar()     #number of layers
     self.h=StringVar()          #layer thickness
-    self.sigmac=StringVar()      #layer conductivity
+    self.sigmac=StringVar()     #layer conductivity
     self.s=StringVar()          #spacing thickness
-    self.mus=StringVar()	#spacing permeabilities
+    self.mus=StringVar()        #spacing permeabilities
     self.w=StringVar()          #window width
     self.m=StringVar()          #turns per layer
     self.nwinding=StringVar()   #number of windings
@@ -124,8 +121,8 @@ class GUI(Frame):
   def centerWindow(self):
     sw = self.root.winfo_screenwidth()
     sh = self.root.winfo_screenheight()
-    w = int(sw*0.5)
-    h = int(sh*0.4)
+    w = int(sw*0.75)
+    h = int(sh*0.6)
     x = (sw - w)/2
     y = (sh - h)/2
     self.root.geometry('%dx%d+%d+%d' % (w, h, x, y))
@@ -134,8 +131,6 @@ class GUI(Frame):
     '''Reset the scroll region to encompass the inner frame'''
     self.canvas.configure(scrollregion=self.canvas.bbox("all"))
   
-  
-  #
   def designref(self):
     img = tk.Toplevel(self)
     img.title("M2Spice - Design Reference")
@@ -625,8 +620,8 @@ class GUI(Frame):
       Xs.append(complex(0,1)*(f*2*math.pi)*mus[i1+1]*s[i1+1]*d/w[i1])
 
     #impedance for the ferrite core
-    Xfb=complex(0,1)*(f*2*math.pi)*4*math.pi*1e-7*Ac/(gt+Ac*w[i1]/(mur*c*d))
-    Xft=complex(0,1)*(f*2*math.pi)*4*math.pi*1e-7*Ac/(gb+Ac*w[i1]/(mur*c*d))
+    Xfb=complex(0,1)*(f*2*math.pi)*4*math.pi*1e-7*Ac/(gb+Ac*w[i1]/(mur*c*d))
+    Xft=complex(0,1)*(f*2*math.pi)*4*math.pi*1e-7*Ac/(gt+Ac*w[i1]/(mur*c*d))
     Xts=complex(0,1)*(f*2*math.pi)*mus[0]*s[0]*d/w[i1]
 
     #calculate output
@@ -692,7 +687,7 @@ class GUI(Frame):
             for index_layer in range(NumofLayer):
               if WindingIndex[index_layer]==index_winding+1:
                 f.write('\n* --> Includes Layer {}'.format(index_layer+1))
-                f.write('\n* ---> thickness {}, width {}, turns {}, spacing above {:4.2f}m, spacing below {:4.2f}m'.format(h[index_layer], w[index_layer], m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
+                f.write('\n* ---> thickness {:4.2f}um, width {:4.2f}mm, turns {}, spacing above {:4.2f}mm, spacing below {:4.2f}mm'.format(h[index_layer]*1e6, w[index_layer]*1e3, m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
                 totalturn=totalturn+m[index_layer]
             f.write('\n* -> Winding {0} has {1} total turns;'.format(index_winding+1, totalturn))
 
@@ -705,7 +700,7 @@ class GUI(Frame):
             for index_layer in range(NumofLayer):
               if WindingIndex[index_layer]==index_winding+1:
                 f.write('\n* --> Includes Layer {}'.format(index_layer+1))
-                f.write('\n* ---> thickness {}, width {}, turns {}, spacing above {:4.2f}m, spacing below {:4.2f}m'.format(h[index_layer], w[index_layer], m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
+                f.write('\n* ---> thickness {:4.2f}um, width {:4.2f}mm, turns {}, spacing above {:4.2f}mm, spacing below {:4.2f}mm'.format(h[index_layer]*1e6, w[index_layer]*1e3, m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
                 numSeriesLayers+=1
                 totalturn=totalturn+m[index_layer]
             f.write('\n* -> Winding {0} has {1} total turns;'.format(index_winding+1, totalturn))
