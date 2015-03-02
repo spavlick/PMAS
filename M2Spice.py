@@ -721,21 +721,21 @@ class GUI(Frame):
           mx=m[index]
 
           f.write('\n\n*NetList for Layer {}'.format(index+1))
-          f.write('\nLe{0} N{0} P{0} {1}'.format(index,mx**2))
-          f.write('\nLi{0} G Md{0} {1}'.format(index,1))
-          f.write('\nLg{0} Mg{0} Md{0} {1:14.2f}p'.format(index,lb*1e12))
-          f.write('\nRg{0} Mc{0} Mg{0} {1:14.2f}m'.format(index,rb*1e3))
-          f.write('\nRt{0} Mc{0} Mt{0} {1:14.2f}u'.format(index,ra*1e6))
-          f.write('\nRb{0} Mb{0} Mc{0} {1:14.2f}u'.format(index,ra*1e6))
-          f.write('\nLt{0} T{0} Mt{0} {1:14.2f}p'.format(index,la*1e12))
-          f.write('\nLb{0} Mb{0} B{0} {1:14.2f}p'.format(index,la*1e12))
-          f.write('\nLs{0} B{0} T{1} {2:14.2f}n'.format(index,index+1,ls*1e9))
-          f.write('\nK{0} Le{0} Li{0} 1'.format(index))
+          f.write('\nLe{0} N{0} P{0} {1}'.format(index+1,mx**2))
+          f.write('\nLi{0} G Md{0} {1}'.format(index+1,1))
+          f.write('\nLg{0} Mg{0} Md{0} {1:14.2f}p'.format(index+1,lb*1e12))
+          f.write('\nRg{0} Mc{0} Mg{0} {1:14.2f}m'.format(index+1,rb*1e3))
+          f.write('\nRt{0} Mc{0} Mt{0} {1:14.2f}u'.format(index+1,ra*1e6))
+          f.write('\nRb{0} Mb{0} Mc{0} {1:14.2f}u'.format(index+1,ra*1e6))
+          f.write('\nLt{0} T{0} Mt{0} {1:14.2f}p'.format(index+1,la*1e12))
+          f.write('\nLb{0} Mb{0} B{0} {1:14.2f}p'.format(index+1,la*1e12))
+          f.write('\nLs{0} B{0} T{1} {2:14.2f}n'.format(index+1,index+2,ls*1e9))
+          f.write('\nK{0} Le{0} Li{0} 1'.format(index+1))
 
         #Print the ferrite cores and top spacing
         f.write('\n\n*NetList for Top and Bottom Ferrites, as well as the First Spacing on Top Side')
-        f.write('\nLft T0 G {:14.2f}u'.format(self.Lft*1e6))
-        f.write('\nLfb T{} G {:14.2f}u'.format(NumofLayer+1,self.Lfb*1e6))
+        f.write('\nLft T0 G {:14.2f}n'.format(self.Lft*1e9))
+        f.write('\nLfb T{} G {:14.2f}n'.format(NumofLayer+1,self.Lfb*1e9))
         f.write('\nLs0 T1 T0 {:14.2f}n'.format(self.Lts*1e9))
 
         #Print the external connections
