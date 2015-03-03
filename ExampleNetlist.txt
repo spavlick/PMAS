@@ -1,6 +1,6 @@
 
 ******************************************************************
-*****        Fri Feb 27 10:58:48 2015 by Minjie-MAC          *****
+*****        Tue Mar 03 15:18:35 2015 by Minjie          *****
 ******************************************************************
 ******************************************************************
 ******* Comprehensive  Summary of the Magnetic Structure  ********
@@ -32,56 +32,56 @@
 ******************************************************************
 
 *NetList for Layer 1
-Le0 N0 P0 1
-Li0 G Md0 1
-Lg0 Mg0 Md0        -164.36p
-Rg0 Mc0 Mg0          45.67m
-Rt0 Mc0 Mt0        3471.24u
-Rb0 Mb0 Mc0        3471.24u
-Lt0 T0 Mt0         496.60p
-Lb0 Mb0 B0         496.60p
-Ls0 B0 T1          49.11n
-K0 Le0 Li0 1
-
-*NetList for Layer 2
 Le1 N1 P1 1
 Li1 G Md1 1
-Lg1 Mg1 Md1        -177.39p
-Rg1 Mc1 Mg1          45.40m
-Rt1 Mc1 Mt1        4061.32u
-Rb1 Mb1 Mc1        4061.32u
-Lt1 T1 Mt1         536.62p
-Lb1 Mb1 B1         536.62p
-Ls1 B1 T2           9.41n
+Lg1 Mg1 Md1        -164.36p
+Rg1 Mc1 Mg1          45.67m
+Rt1 Mc1 Mt1        3471.24u
+Rb1 Mb1 Mc1        3471.24u
+Lt1 T1 Mt1         496.60p
+Lb1 Mb1 B1         496.60p
+Ls1 B1 T2          49.11n
 K1 Le1 Li1 1
 
-*NetList for Layer 3
-Le2 N2 P2 4
+*NetList for Layer 2
+Le2 N2 P2 1
 Li2 G Md2 1
-Lg2 Mg2 Md2        -190.26p
-Rg2 Mc2 Mg2          45.10m
-Rt2 Mc2 Mt2        4694.54u
-Rb2 Mb2 Mc2        4694.54u
-Lt2 T2 Mt2         576.33p
-Lb2 Mb2 B2         576.33p
-Ls2 B2 T3          56.66n
+Lg2 Mg2 Md2        -177.39p
+Rg2 Mc2 Mg2          45.40m
+Rt2 Mc2 Mt2        4061.32u
+Rb2 Mb2 Mc2        4061.32u
+Lt2 T2 Mt2         536.62p
+Lb2 Mb2 B2         536.62p
+Ls2 B2 T3           9.41n
 K2 Le2 Li2 1
 
-*NetList for Layer 4
-Le3 N3 P3 1
+*NetList for Layer 3
+Le3 N3 P3 4
 Li3 G Md3 1
-Lg3 Mg3 Md3        -202.97p
-Rg3 Mc3 Mg3          44.79m
-Rt3 Mc3 Mt3        5370.00u
-Rb3 Mb3 Mc3        5370.00u
-Lt3 T3 Mt3         615.70p
-Lb3 Mb3 B3         615.70p
-Ls3 B3 T4         103.91n
+Lg3 Mg3 Md3        -190.26p
+Rg3 Mc3 Mg3          45.10m
+Rt3 Mc3 Mt3        4694.54u
+Rb3 Mb3 Mc3        4694.54u
+Lt3 T3 Mt3         576.33p
+Lb3 Mb3 B3         576.33p
+Ls3 B3 T4          56.66n
 K3 Le3 Li3 1
 
+*NetList for Layer 4
+Le4 N4 P4 1
+Li4 G Md4 1
+Lg4 Mg4 Md4        -202.97p
+Rg4 Mc4 Mg4          44.79m
+Rt4 Mc4 Mt4        5370.00u
+Rb4 Mb4 Mc4        5370.00u
+Lt4 T4 Mt4         615.70p
+Lb4 Mb4 B4         615.70p
+Ls4 B4 T5         103.91n
+K4 Le4 Li4 1
+
 *NetList for Top and Bottom Ferrites, as well as the First Spacing on Top Side
-Lft T0 G           0.69u
-Lfb T5 G           0.34u
+Lft T0 G          68.86n
+Lfb T5 G         343.86n
 Ls0 T1 T0          77.93n
 
 *NetList for Winding Interconnects

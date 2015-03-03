@@ -50,7 +50,7 @@ class GUI(Frame):
     self.gt=StringVar()         #core gap length on the top side
     self.gb=StringVar()         #core gap length on the bottom side
     self.Ac=StringVar()         #effective gap area
-    self.le=StringVar()         #effective length
+    self.d=StringVar()         #effective length
     self.c=StringVar()          #thickness of top and bottom ferrite
 
     #create variables for entry objects
@@ -69,7 +69,7 @@ class GUI(Frame):
     self.gtentry=None
     self.gbentry=None
     self.Acentry=None
-    self.leentry=None
+    self.dentry=None
     self.centry=None
     
     #create error messages
@@ -97,7 +97,7 @@ class GUI(Frame):
     self.entries['gt']=self.gtentry
     self.entries['gb']=self.gbentry
     self.entries['Ac']=self.Acentry
-    self.entries['le']=self.leentry
+    self.entries['d']=self.dentry
     self.entries['c']=self.centry
 
     self.geofilename='geometry.txt'
@@ -421,9 +421,9 @@ class GUI(Frame):
       self.errorMsg=self.errorMsg+'\n -- invalid effective core gap area (Ac), please enter a float value (no "[" or "]").'
       self.errorNum=self.errorNum+1
     try:
-      float(self.le.get())
+      float(self.d.get())
     except Exception:
-      self.errorMsg=self.errorMsg+'\n -- invalid effective core length (le), please enter a float value (no "[" or "]").'
+      self.errorMsg=self.errorMsg+'\n -- invalid effective core length (d), please enter a float value (no "[" or "]").'
       self.errorNum=self.errorNum+1
     try:
       float(self.c.get())
@@ -553,7 +553,7 @@ class GUI(Frame):
     self.gtentry=Entry(self,textvariable=self.gt,bg='yellow')
     self.gbentry=Entry(self,textvariable=self.gb,bg='yellow')
     self.Acentry=Entry(self,textvariable=self.Ac,bg='yellow')
-    self.leentry=Entry(self,textvariable=self.le,bg='yellow')
+    self.dentry=Entry(self,textvariable=self.d,bg='yellow')
     self.centry=Entry(self,textvariable=self.c,bg='yellow')
 
     #positioning the entries
@@ -572,7 +572,7 @@ class GUI(Frame):
     self.gtentry.grid(column=1,row=13,sticky=(W,E),columnspan=2)
     self.gbentry.grid(column=1,row=14,sticky=(W,E),columnspan=2)
     self.Acentry.grid(column=1,row=15,sticky=(W,E),columnspan=2)
-    self.leentry.grid(column=1,row=16,sticky=(W,E),columnspan=2)
+    self.dentry.grid(column=1,row=16,sticky=(W,E),columnspan=2)
     self.centry.grid(column=1,row=17,sticky=(W,E),columnspan=2)
 
   def createbuttons(self):
@@ -589,7 +589,7 @@ class GUI(Frame):
 
   def getImpe(self):
  
-    le=float(self.le.get())
+    d=float(self.d.get())
     h=literal_eval(self.h.get())
     NumofLayer=int(self.nlayer.get())
     sigmac=literal_eval(self.sigmac.get())
@@ -602,8 +602,6 @@ class GUI(Frame):
     f=float(self.f.get())
     c=float(self.c.get())
     Ac=float(self.Ac.get())
-
-    d=le #effective length of the winding
 
     Xa=[]
     Xb=[]
@@ -654,7 +652,7 @@ class GUI(Frame):
         gt=float(self.gt.get())
         gb=float(self.gb.get())
         Ac=float(self.Ac.get())
-        le=float(self.le.get())
+        d=float(self.d.get())
         c=float(self.c.get())
 
         self.getImpe()
