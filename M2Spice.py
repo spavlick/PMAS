@@ -719,26 +719,26 @@ class GUI(Frame):
           mx=m[index]
 
           f.write('\n\n*NetList for Layer {}'.format(index+1))
-          f.write('\nLe{0} N{0} P{0} {1}'.format(index+1,mx**2))
-          f.write('\nLi{0} G Md{0} {1}'.format(index+1,1))
-          f.write('\nLg{0} Mg{0} Md{0} {1:14.2f}p'.format(index+1,lb*1e12))
+          f.write('\nLe{0} N{0} P{0} 	{1} Rser=1f'.format(index+1,mx**2))
+          f.write('\nLi{0} G 	Md{0} 	{1} Rser=1f'.format(index+1,1))
+          f.write('\nLg{0} Mg{0} Md{0} {1:14.2f}p Rser=1f'.format(index+1,lb*1e12))
           f.write('\nRg{0} Mc{0} Mg{0} {1:14.2f}m'.format(index+1,rb*1e3))
           f.write('\nRt{0} Mc{0} Mt{0} {1:14.2f}u'.format(index+1,ra*1e6))
           f.write('\nRb{0} Mb{0} Mc{0} {1:14.2f}u'.format(index+1,ra*1e6))
-          f.write('\nLt{0} T{0} Mt{0} {1:14.2f}p'.format(index+1,la*1e12))
-          f.write('\nLb{0} Mb{0} B{0} {1:14.2f}p'.format(index+1,la*1e12))
-          f.write('\nLs{0} B{0} T{1} {2:14.2f}n'.format(index+1,index+2,ls*1e9))
+          f.write('\nLt{0} T{0} Mt{0} {1:14.2f}p Rser=1f'.format(index+1,la*1e12))
+          f.write('\nLb{0} Mb{0} B{0} {1:14.2f}p Rser=1f'.format(index+1,la*1e12))
+          f.write('\nLs{0} B{0} T{1} {2:14.2f}n  Rser=1f'.format(index+1,index+2,ls*1e9))
           f.write('\nK{0} Le{0} Li{0} 1'.format(index+1))
 
         #Print the ferrite cores and top spacing
         f.write('\n\n*NetList for Top and Bottom Ferrites, as well as the First Spacing on Top Side')
-        f.write('\nLft T0 G {:14.2f}n'.format(self.Lft*1e9))
-        f.write('\nLfb T{} G {:14.2f}n'.format(NumofLayer+1,self.Lfb*1e9))
-        f.write('\nLs0 T1 T0 {:14.2f}n'.format(self.Lts*1e9))
+        f.write('\nLft T0 G {:14.2f}n Rser=1f'.format(self.Lft*1e9))
+        f.write('\nLfb T{} G {:14.2f}n Rser=1f'.format(NumofLayer+1,self.Lfb*1e9))
+        f.write('\nLs0 T1 T0 {:14.2f}n Rser=1f'.format(self.Lts*1e9))
 
         #Print the external connections
         f.write('\n\n*NetList for Winding Interconnects')
-        f.write('\n*A few 1n ohm resistors are used as short interconnects')
+        f.write('\n*A few 1f ohm resistors are used as short interconnects')
 
         #Create External Winding Ports
         for index_winding in range(NumofWinding):
@@ -748,8 +748,8 @@ class GUI(Frame):
             for index_layer in range(NumofLayer):
               if WindingIndex[index_layer]==index_winding+1:
                 f.write('\n* -->Include layer {}'.format(index_layer+1))
-                f.write('\nRexP{0} PortP{1} P{0}    1n'.format(index_layer+1,index_winding+1))
-                f.write('\nRexN{0} PortN{1} N{0}    1n'.format(index_layer+1,index_winding+1))
+                f.write('\nRexP{0} PortP{1} P{0}    1f'.format(index_layer+1,index_winding+1))
+                f.write('\nRexN{0} PortN{1} N{0}    1f'.format(index_layer+1,index_winding+1))
 
 
           #Series Connected
@@ -764,11 +764,11 @@ class GUI(Frame):
                 Serieslayers[numSeriesLayers]=index_layer+1
                 numSeriesLayers+=1
             #defining two wires from external port to the front and end layers
-            f.write('\nRexP{0} PortP{1} P{0}    1n'.format(Serieslayers[1],index_winding+1))
-            f.write('\nRexN{0} PortN{1} N{0}    1n'.format(Serieslayers[numSeriesLayers-1],index_winding+1))
+            f.write('\nRexP{0} PortP{1} P{0}    1f'.format(Serieslayers[1],index_winding+1))
+            f.write('\nRexN{0} PortN{1} N{0}    1f'.format(Serieslayers[numSeriesLayers-1],index_winding+1))
             #defining the interconnects among series connected layers
             for index_SeriesLayers in range(numSeriesLayers-2):
-              f.write('\nRexM{0} N{0} P{1}      1n'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2]))
+              f.write('\nRexM{0} N{0} P{1}      1f'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2]))
 
 
 
