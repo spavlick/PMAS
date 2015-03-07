@@ -1,6 +1,6 @@
 
 ******************************************************************
-*****        Tue Mar 03 15:18:35 2015 by Minjie          *****
+*****        Sat Mar 07 01:15:55 2015 by Minjie          *****
 ******************************************************************
 ******************************************************************
 ******* Comprehensive  Summary of the Magnetic Structure  ********
@@ -8,10 +8,12 @@
 **** use the external Port Name to interface with your circuit ***
 ******************************************************************
 
+* The name of the component is: componentname. This name can only be used once in a circuit.
+
 * This planar structure has 2 windings and 4 layers
 
 * -> All layers in winding 1 are Series Connected; 
-* -> Its external Port Name: PortP1, PortN1
+* -> Its external Port Name: PortP1_componentname, PortN1_componentname
 * --> Includes Layer 1
 * ---> thickness 17.50um, width 5.00mm, turns 1, spacing above 1.35mm, spacing below 0.79mm
 * --> Includes Layer 4
@@ -19,7 +21,7 @@
 * -> Winding 1 has 2 total turns;
 
 * -> All layers in winding 2 are Parallel Connected; 
-* -> Its external Port Name: PortP2, PortN2
+* -> Its external Port Name: PortP2_componentname, PortN2_componentname
 * --> Includes Layer 2
 * ---> thickness 17.50um, width 5.00mm, turns 1, spacing above 0.79mm, spacing below 0.14mm
 * --> Includes Layer 3
@@ -32,75 +34,80 @@
 ******************************************************************
 
 *NetList for Layer 1
-Le1 N1 P1 1
-Li1 G Md1 1
-Lg1 Mg1 Md1        -164.36p
-Rg1 Mc1 Mg1          45.67m
-Rt1 Mc1 Mt1        3471.24u
-Rb1 Mb1 Mc1        3471.24u
-Lt1 T1 Mt1         496.60p
-Lb1 Mb1 B1         496.60p
-Ls1 B1 T2          49.11n
-K1 Le1 Li1 1
+Le1_componentname N1_componentname P1_componentname 1 Rser=1f
+Li1_componentname G_componentname Md1_componentname 1 Rser=1f
+Lg1_componentname Mg1_componentname Md1_componentname        -164.36p Rser=1f
+Rg1_componentname Mc1_componentname Mg1_componentname          45.67m
+Rt1_componentname Mc1_componentname Mt1_componentname        3471.24u
+Rb1_componentname Mb1_componentname Mc1_componentname        3471.24u
+Lt1_componentname T1_componentname Mt1_componentname         496.60p Rser=1f
+Lb1_componentname Mb1_componentname B1_componentname         496.60p Rser=1f
+Ls1_componentname B1_componentname T2_componentname          49.11n  Rser=1f
+K1_componentname Le1_componentname Li1_componentname 1
 
 *NetList for Layer 2
-Le2 N2 P2 1
-Li2 G Md2 1
-Lg2 Mg2 Md2        -177.39p
-Rg2 Mc2 Mg2          45.40m
-Rt2 Mc2 Mt2        4061.32u
-Rb2 Mb2 Mc2        4061.32u
-Lt2 T2 Mt2         536.62p
-Lb2 Mb2 B2         536.62p
-Ls2 B2 T3           9.41n
-K2 Le2 Li2 1
+Le2_componentname N2_componentname P2_componentname 1 Rser=1f
+Li2_componentname G_componentname Md2_componentname 1 Rser=1f
+Lg2_componentname Mg2_componentname Md2_componentname        -177.39p Rser=1f
+Rg2_componentname Mc2_componentname Mg2_componentname          45.40m
+Rt2_componentname Mc2_componentname Mt2_componentname        4061.32u
+Rb2_componentname Mb2_componentname Mc2_componentname        4061.32u
+Lt2_componentname T2_componentname Mt2_componentname         536.62p Rser=1f
+Lb2_componentname Mb2_componentname B2_componentname         536.62p Rser=1f
+Ls2_componentname B2_componentname T3_componentname           9.41n  Rser=1f
+K2_componentname Le2_componentname Li2_componentname 1
 
 *NetList for Layer 3
-Le3 N3 P3 4
-Li3 G Md3 1
-Lg3 Mg3 Md3        -190.26p
-Rg3 Mc3 Mg3          45.10m
-Rt3 Mc3 Mt3        4694.54u
-Rb3 Mb3 Mc3        4694.54u
-Lt3 T3 Mt3         576.33p
-Lb3 Mb3 B3         576.33p
-Ls3 B3 T4          56.66n
-K3 Le3 Li3 1
+Le3_componentname N3_componentname P3_componentname 4 Rser=1f
+Li3_componentname G_componentname Md3_componentname 1 Rser=1f
+Lg3_componentname Mg3_componentname Md3_componentname        -190.26p Rser=1f
+Rg3_componentname Mc3_componentname Mg3_componentname          45.10m
+Rt3_componentname Mc3_componentname Mt3_componentname        4694.54u
+Rb3_componentname Mb3_componentname Mc3_componentname        4694.54u
+Lt3_componentname T3_componentname Mt3_componentname         576.33p Rser=1f
+Lb3_componentname Mb3_componentname B3_componentname         576.33p Rser=1f
+Ls3_componentname B3_componentname T4_componentname          56.66n  Rser=1f
+K3_componentname Le3_componentname Li3_componentname 1
 
 *NetList for Layer 4
-Le4 N4 P4 1
-Li4 G Md4 1
-Lg4 Mg4 Md4        -202.97p
-Rg4 Mc4 Mg4          44.79m
-Rt4 Mc4 Mt4        5370.00u
-Rb4 Mb4 Mc4        5370.00u
-Lt4 T4 Mt4         615.70p
-Lb4 Mb4 B4         615.70p
-Ls4 B4 T5         103.91n
-K4 Le4 Li4 1
+Le4_componentname N4_componentname P4_componentname 1 Rser=1f
+Li4_componentname G_componentname Md4_componentname 1 Rser=1f
+Lg4_componentname Mg4_componentname Md4_componentname        -202.97p Rser=1f
+Rg4_componentname Mc4_componentname Mg4_componentname          44.79m
+Rt4_componentname Mc4_componentname Mt4_componentname        5370.00u
+Rb4_componentname Mb4_componentname Mc4_componentname        5370.00u
+Lt4_componentname T4_componentname Mt4_componentname         615.70p Rser=1f
+Lb4_componentname Mb4_componentname B4_componentname         615.70p Rser=1f
+Ls4_componentname B4_componentname T5_componentname         103.91n  Rser=1f
+K4_componentname Le4_componentname Li4_componentname 1
 
 *NetList for Top and Bottom Ferrites, as well as the First Spacing on Top Side
-Lft T0 G          68.86n
-Lfb T5 G         343.86n
-Ls0 T1 T0          77.93n
+Lft_componentname T0_componentname G_componentname         686.67n Rser=1f
+Lfb_componentname T5_componentname G_componentname         343.86n Rser=1f
+Ls0_componentname T1_componentname T0_componentname          77.93n Rser=1f
 
 *NetList for Winding Interconnects
-*A few 1n ohm resistors are used as short interconnects
+*A few 1f ohm resistors are used as short interconnects
 
 * -> Winding 1 is Series Connected
 * -->Include layer 1
 * -->Include layer 4
-RexP1 PortP1 P1    1n
-RexN4 PortN1 N4    1n
-RexM1 N1 P4      1n
+RexP1_componentname PortP1_componentname P1_componentname    1f
+RexN4_componentname PortN1_componentname N4_componentname    1f
+RexM1_componentname N1_componentname P4_componentname      1f
 
 * -> Winding 2 is Parallel Connected
 * -->Include layer 2
-RexP2 PortP2 P2    1n
-RexN2 PortN2 N2    1n
+RexP2_componentname PortP2_componentname P2_componentname    1f
+RexN2_componentname PortN2_componentname N2_componentname    1f
 * -->Include layer 3
-RexP3 PortP2 P3    1n
-RexN3 PortN2 N3    1n
+RexP3_componentname PortP2_componentname P3_componentname    1f
+RexN3_componentname PortN2_componentname N3_componentname    1f
+
+*One 1G ohm resistors is used to ground the floating domain
+Rgnd_componentname G_componentname 0  1G
+
+
 ******************************************************************
 *****                   Netlist Ends                      ********
 ******************************************************************
