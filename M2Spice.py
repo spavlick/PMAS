@@ -662,6 +662,8 @@ class GUI(Frame):
         c=float(self.c.get())
         x=self.x.get()    #x is a string value
         x=x.replace('\n', '').replace('\r', '').replace(' ','') #get rid of all invalid string 
+        if x != '':
+           x='_'+x
 
         self.getImpe()
 
@@ -728,22 +730,22 @@ class GUI(Frame):
           mx=m[index]
 
           f.write('\n\n*NetList for Layer {}'.format(index+1))
-          f.write('\nLe{0}_{2} N{0}_{2} P{0}_{2} {1} Rser=1f'.format(index+1,mx**2,x))
-          f.write('\nLi{0}_{2} G_{2} Md{0}_{2} {1} Rser=1f'.format(index+1,1,x))
-          f.write('\nLg{0}_{2} Mg{0}_{2} Md{0}_{2} {1:14.2f}p Rser=1f'.format(index+1,lb*1e12,x))
-          f.write('\nRg{0}_{2} Mc{0}_{2} Mg{0}_{2} {1:14.2f}m'.format(index+1,rb*1e3,x))
-          f.write('\nRt{0}_{2} Mc{0}_{2} Mt{0}_{2} {1:14.2f}u'.format(index+1,ra*1e6,x))
-          f.write('\nRb{0}_{2} Mb{0}_{2} Mc{0}_{2} {1:14.2f}u'.format(index+1,ra*1e6,x))
-          f.write('\nLt{0}_{2} T{0}_{2} Mt{0}_{2} {1:14.2f}p Rser=1f'.format(index+1,la*1e12,x))
-          f.write('\nLb{0}_{2} Mb{0}_{2} B{0}_{2} {1:14.2f}p Rser=1f'.format(index+1,la*1e12,x))
-          f.write('\nLs{0}_{3} B{0}_{3} T{1}_{3} {2:14.2f}n  Rser=1f'.format(index+1,index+2,ls*1e9,x))
-          f.write('\nK{0}_{1} Le{0}_{1} Li{0}_{1} 1'.format(index+1,x))
+          f.write('\nLe{0}{2} N{0}{2} P{0}{2} {1} Rser=1f'.format(index+1,mx**2,x))
+          f.write('\nLi{0}{2} G{2} Md{0}{2} {1} Rser=1f'.format(index+1,1,x))
+          f.write('\nLg{0}{2} Mg{0}{2} Md{0}{2} {1:14.2f}p Rser=1f'.format(index+1,lb*1e12,x))
+          f.write('\nRg{0}{2} Mc{0}{2} Mg{0}{2} {1:14.2f}m'.format(index+1,rb*1e3,x))
+          f.write('\nRt{0}{2} Mc{0}{2} Mt{0}{2} {1:14.2f}u'.format(index+1,ra*1e6,x))
+          f.write('\nRb{0}{2} Mb{0}{2} Mc{0}{2} {1:14.2f}u'.format(index+1,ra*1e6,x))
+          f.write('\nLt{0}{2} T{0}{2} Mt{0}{2} {1:14.2f}p Rser=1f'.format(index+1,la*1e12,x))
+          f.write('\nLb{0}{2} Mb{0}{2} B{0}{2} {1:14.2f}p Rser=1f'.format(index+1,la*1e12,x))
+          f.write('\nLs{0}{3} B{0}{3} T{1}{3} {2:14.2f}n  Rser=1f'.format(index+1,index+2,ls*1e9,x))
+          f.write('\nK{0}{1} Le{0}{1} Li{0}{1} 1'.format(index+1,x))
 
         #Print the ferrite cores and top spacing
         f.write('\n\n*NetList for Top and Bottom Ferrites, as well as the First Spacing on Top Side')
-        f.write('\nLft_{1} T0_{1} G_{1} {0:14.2f}n Rser=1f'.format(self.Lft*1e9,x))
-        f.write('\nLfb_{2} T{0}_{2} G_{2} {1:14.2f}n Rser=1f'.format(NumofLayer+1,self.Lfb*1e9,x))
-        f.write('\nLs0_{1} T1_{1} T0_{1} {0:14.2f}n Rser=1f'.format(self.Lts*1e9,x))
+        f.write('\nLft{1} T0{1} G{1} {0:14.2f}n Rser=1f'.format(self.Lft*1e9,x))
+        f.write('\nLfb{2} T{0}{2} G{2} {1:14.2f}n Rser=1f'.format(NumofLayer+1,self.Lfb*1e9,x))
+        f.write('\nLs0{1} T1{1} T0{1} {0:14.2f}n Rser=1f'.format(self.Lts*1e9,x))
 
         #Print the external connections
         f.write('\n\n*NetList for Winding Interconnects')
@@ -757,8 +759,8 @@ class GUI(Frame):
             for index_layer in range(NumofLayer):
               if WindingIndex[index_layer]==index_winding+1:
                 f.write('\n* -->Include layer {}'.format(index_layer+1))
-                f.write('\nRexP{0}_{2} PortP{1}_{2} P{0}_{2}    1f'.format(index_layer+1,index_winding+1,x))
-                f.write('\nRexN{0}_{2} PortN{1}_{2} N{0}_{2}    1f'.format(index_layer+1,index_winding+1,x))
+                f.write('\nRexP{0}{2} PortP{1}{2} P{0}{2}    1f'.format(index_layer+1,index_winding+1,x))
+                f.write('\nRexN{0}{2} PortN{1}{2} N{0}{2}    1f'.format(index_layer+1,index_winding+1,x))
 
 
           #Series Connected
@@ -773,14 +775,14 @@ class GUI(Frame):
                 Serieslayers[numSeriesLayers]=index_layer+1
                 numSeriesLayers+=1
             #defining two wires from external port to the front and end layers
-            f.write('\nRexP{0}_{2} PortP{1}_{2} P{0}_{2}    1f'.format(Serieslayers[1],index_winding+1,x))
-            f.write('\nRexN{0}_{2} PortN{1}_{2} N{0}_{2}    1f'.format(Serieslayers[numSeriesLayers-1],index_winding+1,x))
+            f.write('\nRexP{0}{2} PortP{1}{2} P{0}{2}    1f'.format(Serieslayers[1],index_winding+1,x))
+            f.write('\nRexN{0}{2} PortN{1}{2} N{0}{2}    1f'.format(Serieslayers[numSeriesLayers-1],index_winding+1,x))
             #defining the interconnects among series connected layers
             for index_SeriesLayers in range(numSeriesLayers-2):
-              f.write('\nRexM{0}_{2} N{0}_{2} P{1}_{2}      1f'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2],x))
+              f.write('\nRexM{0}{2} N{0}{2} P{1}{2}      1f'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2],x))
         
         f.write('\n\n*One 1G ohm resistors is used to ground the floating domain')
-        f.write('\nRgnd_{0} G_{0} 0  1G\n\n'.format(x))
+        f.write('\nRgnd{0} G{0} 0  1G\n\n'.format(x))
 
         #netlist finalized
         f.write('\n******************************************************************')
