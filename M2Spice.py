@@ -692,7 +692,7 @@ class GUI(Frame):
         for index_winding in range(NumofWinding):
             #Parallel Connected
           if WindingStyle[index_winding]==1:
-            f.write('\n\n* -> All layers in winding {0} are Parallel Connected; \n* -> Its external Port Name: PortP{0}_{1}, PortN{0}_{1}'.format(index_winding+1,x))
+            f.write('\n\n* -> All layers in winding {0} are Parallel Connected; \n* -> Its external Port Name: PortP{0}{1}, PortN{0}{1}'.format(index_winding+1,x))
             totalturn=0
             for index_layer in range(NumofLayer):
               if WindingIndex[index_layer]==index_winding+1:
@@ -704,7 +704,7 @@ class GUI(Frame):
         
             #Series Connected
           if WindingStyle[index_winding]==0:
-            f.write('\n\n* -> All layers in winding {0} are Series Connected; \n* -> Its external Port Name: PortP{0}_{1}, PortN{0}_{1}'.format(index_winding+1,x))
+            f.write('\n\n* -> All layers in winding {0} are Series Connected; \n* -> Its external Port Name: PortP{0}{1}, PortN{0}{1}'.format(index_winding+1,x))
             numSeriesLayers=1
             totalturn=0
             for index_layer in range(NumofLayer):
@@ -781,7 +781,7 @@ class GUI(Frame):
             for index_SeriesLayers in range(numSeriesLayers-2):
               f.write('\nRexM{0}{2} N{0}{2} P{1}{2}      1f'.format(Serieslayers[index_SeriesLayers+1],Serieslayers[index_SeriesLayers+2],x))
         
-        f.write('\n\n*One 1G ohm resistors is used to ground the floating domain')
+        f.write('\n\n*One 1G ohm resistor is used to ground the floating domain')
         f.write('\nRgnd{0} G{0} 0  1G\n\n'.format(x))
 
         #netlist finalized
