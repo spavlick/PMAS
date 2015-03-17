@@ -733,7 +733,7 @@ class GUI(Frame):
           f.write('\nLe{0}{2} N{0}{2} P{0}{2} {1} Rser=1f'.format(index+1,mx**2,x))
           f.write('\nLi{0}{2} G{2} Md{0}{2} {1} Rser=1f'.format(index+1,1,x))
           f.write('\nLg{0}{2} Mg{0}{2} Md{0}{2} {1:14.2f}p Rser=1f'.format(index+1,lb*1e12,x))
-          f.write('\nRg{0}{2} Mc{0}{2} Mg{0}{2} {1:14.2f}m'.format(index+1,rb*1e3,x))
+          f.write('\nRg{0}{2} Mc{0}{2} Mg{0}{2} {1:14.2f}u'.format(index+1,rb*1e6,x))
           f.write('\nRt{0}{2} Mc{0}{2} Mt{0}{2} {1:14.2f}u'.format(index+1,ra*1e6,x))
           f.write('\nRb{0}{2} Mb{0}{2} Mc{0}{2} {1:14.2f}u'.format(index+1,ra*1e6,x))
           f.write('\nLt{0}{2} T{0}{2} Mt{0}{2} {1:14.2f}p Rser=1f'.format(index+1,la*1e12,x))
