@@ -1,6 +1,6 @@
 
 ******************************************************************
-*****        Tue Mar 17 13:58:02 2015 by Minjie-MAC          *****
+*****        Tue Mar 17 16:19:18 2015 by Minjie          *****
 ******************************************************************
 ******************************************************************
 ******* Comprehensive  Summary of the Magnetic Structure  ********
@@ -45,7 +45,7 @@
 Le1_EXPE N1_EXPE P1_EXPE 4 Rser=1f
 Li1_EXPE G_EXPE Md1_EXPE 1 Rser=1f
 Lg1_EXPE Mg1_EXPE Md1_EXPE         -44.61p Rser=1f
-Rg1_EXPE Mc1_EXPE Mg1_EXPE           2.48m
+Rg1_EXPE Mc1_EXPE Mg1_EXPE        2480.31u
 Rt1_EXPE Mc1_EXPE Mt1_EXPE        3997.91u
 Rb1_EXPE Mb1_EXPE Mc1_EXPE        3997.91u
 Lt1_EXPE T1_EXPE Mt1_EXPE         149.79p Rser=1f
@@ -57,7 +57,7 @@ K1_EXPE Le1_EXPE Li1_EXPE 1
 Le2_EXPE N2_EXPE P2_EXPE 4 Rser=1f
 Li2_EXPE G_EXPE Md2_EXPE 1 Rser=1f
 Lg2_EXPE Mg2_EXPE Md2_EXPE         -44.61p Rser=1f
-Rg2_EXPE Mc2_EXPE Mg2_EXPE           2.48m
+Rg2_EXPE Mc2_EXPE Mg2_EXPE        2480.31u
 Rt2_EXPE Mc2_EXPE Mt2_EXPE        3997.91u
 Rb2_EXPE Mb2_EXPE Mc2_EXPE        3997.91u
 Lt2_EXPE T2_EXPE Mt2_EXPE         149.79p Rser=1f
@@ -69,7 +69,7 @@ K2_EXPE Le2_EXPE Li2_EXPE 1
 Le3_EXPE N3_EXPE P3_EXPE 1 Rser=1f
 Li3_EXPE G_EXPE Md3_EXPE 1 Rser=1f
 Lg3_EXPE Mg3_EXPE Md3_EXPE         -44.61p Rser=1f
-Rg3_EXPE Mc3_EXPE Mg3_EXPE           2.48m
+Rg3_EXPE Mc3_EXPE Mg3_EXPE        2480.31u
 Rt3_EXPE Mc3_EXPE Mt3_EXPE        3997.91u
 Rb3_EXPE Mb3_EXPE Mc3_EXPE        3997.91u
 Lt3_EXPE T3_EXPE Mt3_EXPE         149.79p Rser=1f
@@ -81,7 +81,7 @@ K3_EXPE Le3_EXPE Li3_EXPE 1
 Le4_EXPE N4_EXPE P4_EXPE 1 Rser=1f
 Li4_EXPE G_EXPE Md4_EXPE 1 Rser=1f
 Lg4_EXPE Mg4_EXPE Md4_EXPE         -44.61p Rser=1f
-Rg4_EXPE Mc4_EXPE Mg4_EXPE           2.48m
+Rg4_EXPE Mc4_EXPE Mg4_EXPE        2480.31u
 Rt4_EXPE Mc4_EXPE Mt4_EXPE        3997.91u
 Rb4_EXPE Mb4_EXPE Mc4_EXPE        3997.91u
 Lt4_EXPE T4_EXPE Mt4_EXPE         149.79p Rser=1f
@@ -93,7 +93,7 @@ K4_EXPE Le4_EXPE Li4_EXPE 1
 Le5_EXPE N5_EXPE P5_EXPE 4 Rser=1f
 Li5_EXPE G_EXPE Md5_EXPE 1 Rser=1f
 Lg5_EXPE Mg5_EXPE Md5_EXPE         -44.61p Rser=1f
-Rg5_EXPE Mc5_EXPE Mg5_EXPE           2.48m
+Rg5_EXPE Mc5_EXPE Mg5_EXPE        2480.31u
 Rt5_EXPE Mc5_EXPE Mt5_EXPE        3997.91u
 Rb5_EXPE Mb5_EXPE Mc5_EXPE        3997.91u
 Lt5_EXPE T5_EXPE Mt5_EXPE         149.79p Rser=1f
@@ -105,7 +105,7 @@ K5_EXPE Le5_EXPE Li5_EXPE 1
 Le6_EXPE N6_EXPE P6_EXPE 4 Rser=1f
 Li6_EXPE G_EXPE Md6_EXPE 1 Rser=1f
 Lg6_EXPE Mg6_EXPE Md6_EXPE         -44.61p Rser=1f
-Rg6_EXPE Mc6_EXPE Mg6_EXPE           2.48m
+Rg6_EXPE Mc6_EXPE Mg6_EXPE        2480.31u
 Rt6_EXPE Mc6_EXPE Mt6_EXPE        3997.91u
 Rb6_EXPE Mb6_EXPE Mc6_EXPE        3997.91u
 Lt6_EXPE T6_EXPE Mt6_EXPE         149.79p Rser=1f
@@ -143,7 +143,7 @@ RexP5_EXPE PortP3_EXPE P5_EXPE    1f
 RexN6_EXPE PortN3_EXPE N6_EXPE    1f
 RexM5_EXPE N5_EXPE P6_EXPE      1f
 
-*One 1G ohm resistors is used to ground the floating domain
+*One 1G ohm resistor is used to ground the floating domain
 Rgnd_EXPE G_EXPE 0  1G
 
 
