@@ -1,0 +1,186 @@
+
+******************************************************************
+*****        Mon Mar 30 13:58:31 2015 by Minjie          *****
+******************************************************************
+******************************************************************
+******* Comprehensive  Summary of the Magnetic Structure  ********
+******* Please double check the geometry information and  ********
+**** use the external Port Name to interface with your circuit ***
+******************************************************************
+
+* The name of the component is: . This name can only be used once in a circuit.
+
+* This planar structure has 3 windings and 8 layers
+
+* -> All layers in winding 1 are Series Connected; 
+* -> Its external Port Name: PortP1, PortN1
+* --> Includes Layer 1
+* ---> thickness 69.00um, width 2.00mm, turns 2, spacing above 0.13mm, spacing below 0.25mm
+* --> Includes Layer 2
+* ---> thickness 69.00um, width 2.00mm, turns 2, spacing above 0.25mm, spacing below 0.13mm
+* -> Winding 1 has 4 total turns;
+
+* -> All layers in winding 2 are Parallel Connected; 
+* -> Its external Port Name: PortP2, PortN2
+* --> Includes Layer 3
+* ---> thickness 69.00um, width 2.00mm, turns 1, spacing above 0.13mm, spacing below 0.25mm
+* --> Includes Layer 4
+* ---> thickness 69.00um, width 2.00mm, turns 1, spacing above 0.25mm, spacing below 0.13mm
+* --> Includes Layer 5
+* ---> thickness 69.00um, width 2.00mm, turns 1, spacing above 0.13mm, spacing below 0.25mm
+* --> Includes Layer 6
+* ---> thickness 69.00um, width 2.00mm, turns 1, spacing above 0.25mm, spacing below 0.13mm
+* -> Winding 2 has 4 total turns;
+
+* -> All layers in winding 3 are Series Connected; 
+* -> Its external Port Name: PortP3, PortN3
+* --> Includes Layer 7
+* ---> thickness 69.00um, width 2.00mm, turns 2, spacing above 0.13mm, spacing below 0.25mm
+* --> Includes Layer 8
+* ---> thickness 69.00um, width 2.00mm, turns 2, spacing above 0.25mm, spacing below 0.13mm
+* -> Winding 3 has 4 total turns;
+******************************************************************
+
+******************************************************************
+*****                   Netlist Starts                    ********
+******************************************************************
+
+*NetList for Layer 1
+Le1 N1 P1 4 Rser=1f
+Li1 G Md1 1 Rser=1f
+Lg1 Mg1 Md1        -114.59p Rser=1f
+Rg1 Mc1 Mg1        2010.38u
+Rt1 Mc1 Mt1         378.32u
+Rb1 Mb1 Mc1         378.32u
+Lt1 T1 Mt1         349.72p Rser=1f
+Lb1 Mb1 B1         349.72p Rser=1f
+Ls1 B1 T2           2.67n  Rser=1f
+K1 Le1 Li1 1
+
+*NetList for Layer 2
+Le2 N2 P2 4 Rser=1f
+Li2 G Md2 1 Rser=1f
+Lg2 Mg2 Md2        -114.59p Rser=1f
+Rg2 Mc2 Mg2        2010.38u
+Rt2 Mc2 Mt2         378.32u
+Rb2 Mb2 Mc2         378.32u
+Lt2 T2 Mt2         349.72p Rser=1f
+Lb2 Mb2 B2         349.72p Rser=1f
+Ls2 B2 T3           1.33n  Rser=1f
+K2 Le2 Li2 1
+
+*NetList for Layer 3
+Le3 N3 P3 1 Rser=1f
+Li3 G Md3 1 Rser=1f
+Lg3 Mg3 Md3        -114.59p Rser=1f
+Rg3 Mc3 Mg3        2010.38u
+Rt3 Mc3 Mt3         378.32u
+Rb3 Mb3 Mc3         378.32u
+Lt3 T3 Mt3         349.72p Rser=1f
+Lb3 Mb3 B3         349.72p Rser=1f
+Ls3 B3 T4           2.67n  Rser=1f
+K3 Le3 Li3 1
+
+*NetList for Layer 4
+Le4 N4 P4 1 Rser=1f
+Li4 G Md4 1 Rser=1f
+Lg4 Mg4 Md4        -114.59p Rser=1f
+Rg4 Mc4 Mg4        2010.38u
+Rt4 Mc4 Mt4         378.32u
+Rb4 Mb4 Mc4         378.32u
+Lt4 T4 Mt4         349.72p Rser=1f
+Lb4 Mb4 B4         349.72p Rser=1f
+Ls4 B4 T5           1.33n  Rser=1f
+K4 Le4 Li4 1
+
+*NetList for Layer 5
+Le5 N5 P5 1 Rser=1f
+Li5 G Md5 1 Rser=1f
+Lg5 Mg5 Md5        -114.59p Rser=1f
+Rg5 Mc5 Mg5        2010.38u
+Rt5 Mc5 Mt5         378.32u
+Rb5 Mb5 Mc5         378.32u
+Lt5 T5 Mt5         349.72p Rser=1f
+Lb5 Mb5 B5         349.72p Rser=1f
+Ls5 B5 T6           2.67n  Rser=1f
+K5 Le5 Li5 1
+
+*NetList for Layer 6
+Le6 N6 P6 1 Rser=1f
+Li6 G Md6 1 Rser=1f
+Lg6 Mg6 Md6        -114.59p Rser=1f
+Rg6 Mc6 Mg6        2010.38u
+Rt6 Mc6 Mt6         378.32u
+Rb6 Mb6 Mc6         378.32u
+Lt6 T6 Mt6         349.72p Rser=1f
+Lb6 Mb6 B6         349.72p Rser=1f
+Ls6 B6 T7           1.33n  Rser=1f
+K6 Le6 Li6 1
+
+*NetList for Layer 7
+Le7 N7 P7 4 Rser=1f
+Li7 G Md7 1 Rser=1f
+Lg7 Mg7 Md7        -114.59p Rser=1f
+Rg7 Mc7 Mg7        2010.38u
+Rt7 Mc7 Mt7         378.32u
+Rb7 Mb7 Mc7         378.32u
+Lt7 T7 Mt7         349.72p Rser=1f
+Lb7 Mb7 B7         349.72p Rser=1f
+Ls7 B7 T8           2.67n  Rser=1f
+K7 Le7 Li7 1
+
+*NetList for Layer 8
+Le8 N8 P8 4 Rser=1f
+Li8 G Md8 1 Rser=1f
+Lg8 Mg8 Md8        -114.59p Rser=1f
+Rg8 Mc8 Mg8        2010.38u
+Rt8 Mc8 Mt8         378.32u
+Rb8 Mb8 Mc8         378.32u
+Lt8 T8 Mt8         349.72p Rser=1f
+Lb8 Mb8 B8         349.72p Rser=1f
+Ls8 B8 T9           1.33n  Rser=1f
+K8 Le8 Li8 1
+
+*NetList for Top and Bottom Ferrites, as well as the First Spacing on Top Side
+Lft T0 G       12095.13n Rser=1f
+Lfb T9 G       12095.13n Rser=1f
+Ls0 T1 T0           1.33n Rser=1f
+
+*NetList for Winding Interconnects
+*A few 1f ohm resistors are used as short interconnects
+
+* -> Winding 1 is Series Connected
+* -->Include layer 1
+* -->Include layer 2
+RexP1 PortP1 P1    1f
+RexN2 PortN1 N2    1f
+RexM1 N1 P2      1f
+
+* -> Winding 2 is Parallel Connected
+* -->Include layer 3
+RexP3 PortP2 P3    1f
+RexN3 PortN2 N3    1f
+* -->Include layer 4
+RexP4 PortP2 P4    1f
+RexN4 PortN2 N4    1f
+* -->Include layer 5
+RexP5 PortP2 P5    1f
+RexN5 PortN2 N5    1f
+* -->Include layer 6
+RexP6 PortP2 P6    1f
+RexN6 PortN2 N6    1f
+
+* -> Winding 3 is Series Connected
+* -->Include layer 7
+* -->Include layer 8
+RexP7 PortP3 P7    1f
+RexN8 PortN3 N8    1f
+RexM7 N7 P8      1f
+
+*One 1G ohm resistor is used to ground the floating domain
+Rgnd G 0  1G
+
+
+******************************************************************
+*****                   Netlist Ends                      ********
+******************************************************************
