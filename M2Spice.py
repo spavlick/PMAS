@@ -494,9 +494,9 @@ class GUI(Frame):
     Label(self,text='Name of the Component (x)',bg='white').grid(column=0,row=18,sticky=W)
     
     Label(self,text='*'*20,bg='white').grid(column=0,row=19,columnspan=6)
-    Label(self,text='S.A. Pavlick, M. Chen, and D.J. Perreault',bg='white').grid(column=0,row=20,columnspan=6)
+    Label(self,text='S. Pavlick, M. Chen, S. Gunter and D. Perreault',bg='white').grid(column=0,row=20,columnspan=6)
     Label(self,text='MIT Power Electronics Research Group',bg='white').grid(column=0,row=21,columnspan=6)
-    Label(self,text='v1.0, Feb 2015',bg='white').grid(column=0,row=22,columnspan=6)
+    Label(self,text='v1.1, August 2015',bg='white').grid(column=0,row=22,columnspan=6)
     Label(self,text='*'*20,bg='white').grid(column=0,row=23,columnspan=6)
 
     Label(self,text='Unit: Hz',bg='white').grid(column=4,row=1,sticky=W)
@@ -656,6 +656,7 @@ class GUI(Frame):
         WindingStyle=literal_eval(self.wstyle.get())
         WindingIndex=literal_eval(self.lindex.get())
         gt=float(self.gt.get())
+        freq=float(self.f.get())
         gb=float(self.gb.get())
         Ac=float(self.Ac.get())
         d=float(self.d.get())
@@ -686,31 +687,31 @@ class GUI(Frame):
         f.write('\n**** use the external Port Name to interface with your circuit ***')
         f.write('\n******************************************************************')
         
-        f.write('\n\n* The name of the component is: {}. This name can only be used once in a circuit.'.format(x))
-        f.write('\n\n* This planar structure has {0} windings and {1} layers'.format(NumofWinding, NumofLayer))
+        f.write('\n\n* The name of the component is: {}.'.format(x))
+        f.write('\n\n* This planar structure has {0} windings and {1} layers.'.format(NumofWinding, NumofLayer))
+        f.write('\n\n* This netlist is generated for {0} Hz operation.'.format(freq))
 
         for index_winding in range(NumofWinding):
             #Parallel Connected
           if WindingStyle[index_winding]==1:
-            f.write('\n\n* -> All layers in winding {0} are Parallel Connected; \n* -> Its external Port Name: PortP{0}{1}, PortN{0}{1}'.format(index_winding+1,x))
+            f.write('\n\n* >>>> Winding {0} >>>> \n* -> All layers in winding {0} are Parallel Connected; \n* -> Its external Port Name: PortP{0}{1}, PortN{0}{1}'.format(index_winding+1,x))
             totalturn=0
             for index_layer in range(NumofLayer):
               if WindingIndex[index_layer]==index_winding+1:
                 f.write('\n* --> Includes Layer {}'.format(index_layer+1))
-                f.write('\n* ---> thickness {:4.2f}um, width {:4.2f}mm, turns {}, spacing above {:4.2f}mm, spacing below {:4.2f}mm'.format(h[index_layer]*1e6, w[index_layer]*1e3, m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
-                totalturn=totalturn+m[index_layer]
+                f.write('\n* ---> h {:4.2f}um, w {:4.2f}mm, turns {}, s above {:4.2f}mm, s below {:4.2f}mm'.format(h[index_layer]*1e6, w[index_layer]*1e3, m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
+                totalturn=m[index_layer]
             f.write('\n* -> Winding {0} has {1} total turns;'.format(index_winding+1, totalturn))
-
         
             #Series Connected
           if WindingStyle[index_winding]==0:
-            f.write('\n\n* -> All layers in winding {0} are Series Connected; \n* -> Its external Port Name: PortP{0}{1}, PortN{0}{1}'.format(index_winding+1,x))
+            f.write('\n\n* >>>> Winding {0} >>>> \n*  -> All layers in winding {0} are Series Connected; \n* -> Its external Port Name: PortP{0}{1}, PortN{0}{1}'.format(index_winding+1,x))
             numSeriesLayers=1
             totalturn=0
             for index_layer in range(NumofLayer):
               if WindingIndex[index_layer]==index_winding+1:
                 f.write('\n* --> Includes Layer {}'.format(index_layer+1))
-                f.write('\n* ---> thickness {:4.2f}um, width {:4.2f}mm, turns {}, spacing above {:4.2f}mm, spacing below {:4.2f}mm'.format(h[index_layer]*1e6, w[index_layer]*1e3, m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
+                f.write('\n* ---> h {:4.2f}um, w {:4.2f}mm, turns {}, s above {:4.2f}mm, s below {:4.2f}mm'.format(h[index_layer]*1e6, w[index_layer]*1e3, m[index_layer], s[index_layer]*1e3, s[index_layer+1]*1e3))
                 numSeriesLayers+=1
                 totalturn=totalturn+m[index_layer]
             f.write('\n* -> Winding {0} has {1} total turns;'.format(index_winding+1, totalturn))

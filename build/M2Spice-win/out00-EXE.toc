@@ -1,4 +1,4 @@
-('C:\\Users\\Minjie\\Dropbox\\Research\\M2Spice\\Python\\dist\\M2Spice-win.exe',
+('C:\\Users\\Minjie\\Dropbox (Personal)\\Research\\M2Spice\\Python\\dist\\M2Spice-win.exe',
  False,
  False,
  'icon.ico',
@@ -6,4 +6,4 @@
  [],
  None,
  False,
- 1427737986L)
+ 1439098583L)
