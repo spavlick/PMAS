@@ -1,0 +1,225 @@
+
+******************************************************************
+*****        Fri Aug 07 16:31:31 2015 by Minjie          *****
+******************************************************************
+******************************************************************
+******* Comprehensive  Summary of the Magnetic Structure  ********
+******* Please double check the geometry information and  ********
+**** use the external Port Name to interface with your circuit ***
+******************************************************************
+
+* The name of the component is: _example.
+
+* This planar structure has 3 windings and 10 layers.
+
+* This netlist is generated for 800000.0 Hz operation.
+
+* >>>> Winding 1 >>>> 
+*  -> All layers in winding 1 are Series Connected; 
+* -> Its external Port Name: PortP1_example, PortN1_example
+* --> Includes Layer 2
+* ---> h 71.00um, w 3.00mm, turns 2, s above 0.20mm, s below 0.12mm
+* --> Includes Layer 3
+* ---> h 71.00um, w 3.00mm, turns 2, s above 0.12mm, s below 0.10mm
+* -> Winding 1 has 4 total turns;
+
+* >>>> Winding 2 >>>> 
+* -> All layers in winding 2 are Parallel Connected; 
+* -> Its external Port Name: PortP2_example, PortN2_example
+* --> Includes Layer 1
+* ---> h 71.00um, w 3.00mm, turns 1, s above 0.20mm, s below 0.20mm
+* --> Includes Layer 4
+* ---> h 71.00um, w 3.00mm, turns 1, s above 0.10mm, s below 0.14mm
+* --> Includes Layer 5
+* ---> h 71.00um, w 3.00mm, turns 1, s above 0.14mm, s below 0.10mm
+* --> Includes Layer 6
+* ---> h 71.00um, w 3.00mm, turns 1, s above 0.10mm, s below 0.14mm
+* --> Includes Layer 7
+* ---> h 71.00um, w 3.00mm, turns 1, s above 0.14mm, s below 0.10mm
+* --> Includes Layer 10
+* ---> h 71.00um, w 3.00mm, turns 1, s above 0.20mm, s below 0.20mm
+* -> Winding 2 has 6 total turns;
+
+* >>>> Winding 3 >>>> 
+*  -> All layers in winding 3 are Series Connected; 
+* -> Its external Port Name: PortP3_example, PortN3_example
+* --> Includes Layer 8
+* ---> h 71.00um, w 3.00mm, turns 2, s above 0.10mm, s below 0.12mm
+* --> Includes Layer 9
+* ---> h 71.00um, w 3.00mm, turns 2, s above 0.12mm, s below 0.20mm
+* -> Winding 3 has 4 total turns;
+******************************************************************
+
+******************************************************************
+*****                   Netlist Starts                    ********
+******************************************************************
+
+*NetList for Layer 1
+Le1_example N1_example P1_example 1 Rser=1f
+Li1_example G_example Md1_example 1 Rser=1f
+Lg1_example Mg1_example Md1_example         -79.76p Rser=1f
+Rg1_example Mc1_example Mg1_example        1333.67u
+Rt1_example Mc1_example Mt1_example         177.98u
+Rb1_example Mb1_example Mc1_example         177.98u
+Lt1_example T1_example Mt1_example         242.26p Rser=1f
+Lb1_example Mb1_example B1_example         242.26p Rser=1f
+Ls1_example B1_example T2_example           1.40n  Rser=1f
+K1_example Le1_example Li1_example 1
+
+*NetList for Layer 2
+Le2_example N2_example P2_example 4 Rser=1f
+Li2_example G_example Md2_example 1 Rser=1f
+Lg2_example Mg2_example Md2_example         -79.76p Rser=1f
+Rg2_example Mc2_example Mg2_example        1333.67u
+Rt2_example Mc2_example Mt2_example         177.98u
+Rb2_example Mb2_example Mc2_example         177.98u
+Lt2_example T2_example Mt2_example         242.26p Rser=1f
+Lb2_example Mb2_example B2_example         242.26p Rser=1f
+Ls2_example B2_example T3_example           0.84n  Rser=1f
+K2_example Le2_example Li2_example 1
+
+*NetList for Layer 3
+Le3_example N3_example P3_example 4 Rser=1f
+Li3_example G_example Md3_example 1 Rser=1f
+Lg3_example Mg3_example Md3_example         -79.76p Rser=1f
+Rg3_example Mc3_example Mg3_example        1333.67u
+Rt3_example Mc3_example Mt3_example         177.98u
+Rb3_example Mb3_example Mc3_example         177.98u
+Lt3_example T3_example Mt3_example         242.26p Rser=1f
+Lb3_example Mb3_example B3_example         242.26p Rser=1f
+Ls3_example B3_example T4_example           0.70n  Rser=1f
+K3_example Le3_example Li3_example 1
+
+*NetList for Layer 4
+Le4_example N4_example P4_example 1 Rser=1f
+Li4_example G_example Md4_example 1 Rser=1f
+Lg4_example Mg4_example Md4_example         -79.76p Rser=1f
+Rg4_example Mc4_example Mg4_example        1333.67u
+Rt4_example Mc4_example Mt4_example         177.98u
+Rb4_example Mb4_example Mc4_example         177.98u
+Lt4_example T4_example Mt4_example         242.26p Rser=1f
+Lb4_example Mb4_example B4_example         242.26p Rser=1f
+Ls4_example B4_example T5_example           0.98n  Rser=1f
+K4_example Le4_example Li4_example 1
+
+*NetList for Layer 5
+Le5_example N5_example P5_example 1 Rser=1f
+Li5_example G_example Md5_example 1 Rser=1f
+Lg5_example Mg5_example Md5_example         -79.76p Rser=1f
+Rg5_example Mc5_example Mg5_example        1333.67u
+Rt5_example Mc5_example Mt5_example         177.98u
+Rb5_example Mb5_example Mc5_example         177.98u
+Lt5_example T5_example Mt5_example         242.26p Rser=1f
+Lb5_example Mb5_example B5_example         242.26p Rser=1f
+Ls5_example B5_example T6_example           0.70n  Rser=1f
+K5_example Le5_example Li5_example 1
+
+*NetList for Layer 6
+Le6_example N6_example P6_example 1 Rser=1f
+Li6_example G_example Md6_example 1 Rser=1f
+Lg6_example Mg6_example Md6_example         -79.76p Rser=1f
+Rg6_example Mc6_example Mg6_example        1333.67u
+Rt6_example Mc6_example Mt6_example         177.98u
+Rb6_example Mb6_example Mc6_example         177.98u
+Lt6_example T6_example Mt6_example         242.26p Rser=1f
+Lb6_example Mb6_example B6_example         242.26p Rser=1f
+Ls6_example B6_example T7_example           0.98n  Rser=1f
+K6_example Le6_example Li6_example 1
+
+*NetList for Layer 7
+Le7_example N7_example P7_example 1 Rser=1f
+Li7_example G_example Md7_example 1 Rser=1f
+Lg7_example Mg7_example Md7_example         -79.76p Rser=1f
+Rg7_example Mc7_example Mg7_example        1333.67u
+Rt7_example Mc7_example Mt7_example         177.98u
+Rb7_example Mb7_example Mc7_example         177.98u
+Lt7_example T7_example Mt7_example         242.26p Rser=1f
+Lb7_example Mb7_example B7_example         242.26p Rser=1f
+Ls7_example B7_example T8_example           0.70n  Rser=1f
+K7_example Le7_example Li7_example 1
+
+*NetList for Layer 8
+Le8_example N8_example P8_example 4 Rser=1f
+Li8_example G_example Md8_example 1 Rser=1f
+Lg8_example Mg8_example Md8_example         -79.76p Rser=1f
+Rg8_example Mc8_example Mg8_example        1333.67u
+Rt8_example Mc8_example Mt8_example         177.98u
+Rb8_example Mb8_example Mc8_example         177.98u
+Lt8_example T8_example Mt8_example         242.26p Rser=1f
+Lb8_example Mb8_example B8_example         242.26p Rser=1f
+Ls8_example B8_example T9_example           0.84n  Rser=1f
+K8_example Le8_example Li8_example 1
+
+*NetList for Layer 9
+Le9_example N9_example P9_example 4 Rser=1f
+Li9_example G_example Md9_example 1 Rser=1f
+Lg9_example Mg9_example Md9_example         -79.76p Rser=1f
+Rg9_example Mc9_example Mg9_example        1333.67u
+Rt9_example Mc9_example Mt9_example         177.98u
+Rb9_example Mb9_example Mc9_example         177.98u
+Lt9_example T9_example Mt9_example         242.26p Rser=1f
+Lb9_example Mb9_example B9_example         242.26p Rser=1f
+Ls9_example B9_example T10_example           1.40n  Rser=1f
+K9_example Le9_example Li9_example 1
+
+*NetList for Layer 10
+Le10_example N10_example P10_example 1 Rser=1f
+Li10_example G_example Md10_example 1 Rser=1f
+Lg10_example Mg10_example Md10_example         -79.76p Rser=1f
+Rg10_example Mc10_example Mg10_example        1333.67u
+Rt10_example Mc10_example Mt10_example         177.98u
+Rb10_example Mb10_example Mc10_example         177.98u
+Lt10_example T10_example Mt10_example         242.26p Rser=1f
+Lb10_example Mb10_example B10_example         242.26p Rser=1f
+Ls10_example B10_example T11_example           1.40n  Rser=1f
+K10_example Le10_example Li10_example 1
+
+*NetList for Top and Bottom Ferrites, as well as the First Spacing on Top Side
+Lft_example T0_example G_example         692.69n Rser=1f
+Lfb_example T11_example G_example         692.69n Rser=1f
+Ls0_example T1_example T0_example           1.40n Rser=1f
+
+*NetList for Winding Interconnects
+*A few 1f ohm resistors are used as short interconnects
+
+* -> Winding 1 is Series Connected
+* -->Include layer 2
+* -->Include layer 3
+RexP2_example PortP1_example P2_example    1f
+RexN3_example PortN1_example N3_example    1f
+RexM2_example N2_example P3_example      1f
+
+* -> Winding 2 is Parallel Connected
+* -->Include layer 1
+RexP1_example PortP2_example P1_example    1f
+RexN1_example PortN2_example N1_example    1f
+* -->Include layer 4
+RexP4_example PortP2_example P4_example    1f
+RexN4_example PortN2_example N4_example    1f
+* -->Include layer 5
+RexP5_example PortP2_example P5_example    1f
+RexN5_example PortN2_example N5_example    1f
+* -->Include layer 6
+RexP6_example PortP2_example P6_example    1f
+RexN6_example PortN2_example N6_example    1f
+* -->Include layer 7
+RexP7_example PortP2_example P7_example    1f
+RexN7_example PortN2_example N7_example    1f
+* -->Include layer 10
+RexP10_example PortP2_example P10_example    1f
+RexN10_example PortN2_example N10_example    1f
+
+* -> Winding 3 is Series Connected
+* -->Include layer 8
+* -->Include layer 9
+RexP8_example PortP3_example P8_example    1f
+RexN9_example PortN3_example N9_example    1f
+RexM8_example N8_example P9_example      1f
+
+*One 1G ohm resistor is used to ground the floating domain
+Rgnd_example G_example 0  1G
+
+
+******************************************************************
+*****                   Netlist Ends                      ********
+******************************************************************

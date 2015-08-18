@@ -17,5 +17,5 @@ exe = EXE(pyz,
           upx=True,
           console=False )
 app = BUNDLE(exe,
-             name='M2Spice.app',
+             name='M2Spice-osx.app',
              icon='icon.icns')
